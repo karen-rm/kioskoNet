@@ -7,7 +7,7 @@
 </head>
 <body>
   <h1>Agregar un titulo</h1>
-  <form>
+  <form  method="POST" action="agregarTitulo">
     <label for="isbn">ISBN:</label><br>
     <input type="text" id="isbn" name="isbn" required><br><br>
 
