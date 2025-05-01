@@ -1,6 +1,6 @@
 <?php
 
-namespace servicioContenido;
+namespace KioskoNet;
 
 class FireBase
 {

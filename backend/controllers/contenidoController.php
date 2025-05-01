@@ -1,7 +1,4 @@
-/*Métodos del controlador:
+<?php
 
-agregarTitulo(req, res)
 
-editarTitulo(req, res)
-
-eliminarTitulo(req, res) */
+?>
