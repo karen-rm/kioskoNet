@@ -1,0 +1,21 @@
+{
+    "name": "manoakys/nusoap",
+    "version": "0.9.7",
+    "type": "library",
+    "description": "NuSoap Repository for Composer with some fixes for PHP 7",
+    "authors": [
+        {
+            "name": "Vaidotas Gaidelis",
+            "email": "user@manoakys.lt"
+        }
+    ],
+    "license": "MIT",
+    "keywords": ["nusoap", "php", "composer", "manoakys"],
+    "homepage": "https://github.com/manoakys/nusoap",
+    "autoload": {
+      "classmap": [
+        "lib/"
+      ]
+    },
+    "minimum-stability": "stable"
+}
