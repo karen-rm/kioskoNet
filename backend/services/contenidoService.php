@@ -1,13 +1,33 @@
 <?php
-    //header("Content-Type: text/xml; charset=UTF-8\r\n");
-    ini_set("log_errors", 1);
-    ini_set("error_log", "reportes/php-error-producto.log");
 
-    require_once 'vendor/autoload.php';
-    require_once 'myFireBase.php';
-    
-    
-    use servicioWebProductos\MyFireBase; 
-    $firebase = new MyFireBase('tienda-e1876-default-rtdb');
-    $server = new soap_server();
-https://kioskonet-fc6a6-default-rtdb.firebaseio.com/ 
+namespace App\Services;
+
+use App\Models\TituloModel;
+
+class GestionarTituloService
+{
+  private $tituloModel;
+
+  public function __construct()
+  {
+    $this->tituloModel = new TituloModel(); // Instanciamos el modelo
+  }
+
+  // Obtener un título
+  public function obtenerTitulo($id)
+  {
+    return $this->tituloModel->obtenerTitulo($id); // Llama al modelo para obtener el título
+  }
+
+  // Agregar un título
+  public function agregarTitulo($id, $data)
+  {
+    return $this->tituloModel->agregarTitulo($id, $data); // Llama al modelo para agregar un título
+  }
+
+  // Eliminar un título
+  public function eliminarTitulo($id)
+  {
+    return $this->tituloModel->eliminarTitulo($id); // Llama al modelo para eliminar un título
+  }
+}
