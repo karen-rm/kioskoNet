@@ -4,7 +4,7 @@ namespace App\Models;
 
 use KioskoNet\FireBase;
 
-class TituloModel
+class ContenidoModel
 {
   private $firebase;
 
@@ -13,21 +13,37 @@ class TituloModel
     $this->firebase = new FireBase("kioskonet-fc6a6-default-rtdb");
   }
 
-  // Obtener título de Firebase
-  public function obtenerTitulo($id)
+  
+  // Función para verificar si el ISBN ya existe
+  public function verificarTituloExistente($isbn, $categoria)
   {
-    return $this->firebase->request('titulos', $id, 'GET');
+      // Solicitud GET
+      $response = $this->firebase->request('Catalogo/' . $categoria, $isbn, 'GET');
+
+      // Si la respuesta está vacía o contiene un error, significa que no existe
+      $decoded = json_decode($response);
+
+      if (empty($decoded)) {
+          return false; // No existe
+      } else {
+          return true; // El título ya existe
+      }
   }
+
+
 
   // Agregar un título a Firebase
-  public function agregarTitulo($id, $data)
+  public function agregarTitulo($isbn, $categoria, $data)
   {
-    return $this->firebase->request('titulos', $id, 'PUT', $data);
+    return $this->firebase->request('Catalogo/' . $categoria, $isbn, 'POST', $data);
   }
 
-  // Eliminar un título de Firebase
-  public function eliminarTitulo($id)
+    public function agregarDetalles($isbn, $data)
   {
-    return $this->firebase->request('titulos', $id, 'DELETE');
+    return $this->firebase->request('Detalles/' , $isbn, 'POST', $data);
   }
+
+
+
+  
 }

@@ -2,32 +2,38 @@
 
 namespace App\Services;
 
-use App\Models\TituloModel;
+use App\Models\ContenidoModel;
 
-class GestionarTituloService
+class ContenidoService
 {
-  private $tituloModel;
+  private $contenidoModel;
 
   public function __construct()
   {
-    $this->tituloModel = new TituloModel(); // Instanciamos el modelo
+    $this->contenidoModel = new ContenidoModel(); // Instanciamos el modelo
   }
 
-  // Obtener un título
-  public function obtenerTitulo($id)
-  {
-    return $this->tituloModel->obtenerTitulo($id); // Llama al modelo para obtener el título
-  }
+ public function agregarTitulo($isbn, $categoria,  $catalogoData, $detallesData)
+{
+    // Verificar si el título ya existe en la base de datos (Catalogo)
+    $tituloExistente = $this->contenidoModel->verificarTituloExistente($isbn, $categoria);
+    
+    if ($tituloExistente) {
+        // Si el título ya existe, devolver un mensaje de error
+        return json_encode(['error' => 'El título con este ISBN ya existe.']);
+    }
 
-  // Agregar un título
-  public function agregarTitulo($id, $data)
-  {
-    return $this->tituloModel->agregarTitulo($id, $data); // Llama al modelo para agregar un título
-  }
+    // Si no existe, agregar el título al Catalogo
+    $this->contenidoModel->agregarTitulo($isbn,$categoria, $catalogoData);
 
-  // Eliminar un título
-  public function eliminarTitulo($id)
-  {
-    return $this->tituloModel->eliminarTitulo($id); // Llama al modelo para eliminar un título
-  }
+    // Agregar los detalles a la colección Detalles
+    $this->contenidoModel->agregarDetalles($isbn, $detallesData);
+
+    // Devolver el éxito
+    return json_encode(['success' => 'Título agregado con éxito.']);
+}
+
+
+
+
 }

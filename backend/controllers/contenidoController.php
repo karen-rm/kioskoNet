@@ -2,42 +2,59 @@
 
 namespace App\Controllers;
 
-use App\Services\GestionarTituloService;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use App\Services\ContenidoService;
 
-class TituloController
+class ContenidoController
 {
-  private $tituloService;
+  private $contenidoService;
 
   public function __construct()
   {
-    $this->tituloService = new GestionarTituloService(); // Instanciamos el servicio
+    $this->contenidoService = new ContenidoService(); // Instanciamos el servicio
   }
 
-  // Método para obtener un título
-  public function obtenerTitulo($request, $response, $args)
-  {
-    $id = $args['id'];
-    $titulo = $this->tituloService->obtenerTitulo($id); // Llamamos al servicio
-    $response->getBody()->write($titulo);
-    return $response;
-  }
 
-  // Método para agregar un título
-  public function agregarTitulo($request, $response, $args)
+  // Método para agregar un nuevo título
+  public function agregarTitulo(Request $request, Response $response, $args)
   {
+    // Obtener los datos del cuerpo de la solicitud
     $data = $request->getParsedBody();
-    $id = $args['id'];
-    $result = $this->tituloService->agregarTitulo($id, $data); // Llamamos al servicio
+
+
+    // Extraer los valores del formulario
+    $isbn = $data['isbn'];
+    $titulo = $data['titulo'];
+    $autor = $data['autor'];
+    $editorial = $data['editorial'];
+    $anio = $data['anio'];
+    $genero = $data['genero'];
+    $precio = $data['precio'];
+    $categoria = $request["categoria"];
+
+    // Organizar los datos para agregar al Catalogo
+    $catalogoData = [
+      'titulo' => $titulo,
+    ];
+
+    // Organizar los datos para agregar a Detalles
+    $detallesData = [
+      'autor' => $autor,
+      'anio' => $anio,
+      'editorial' => $editorial,
+      'genero' => $genero,
+      'precio' => $precio,
+      'titulo' => $titulo,
+    ];
+
+    // Llamar al servicio para verificar si el título ya existe
+    $result = $this->contenidoService->agregarTitulo($isbn, $categoria, $catalogoData, $detallesData);
+
+    // Devolver la respuesta del servicio
     $response->getBody()->write($result);
     return $response;
   }
 
-  // Método para eliminar un título
-  public function eliminarTitulo($request, $response, $args)
-  {
-    $id = $args['id'];
-    $result = $this->tituloService->eliminarTitulo($id); // Llamamos al servicio
-    $response->getBody()->write($result);
-    return $response;
-  }
+  
 }
