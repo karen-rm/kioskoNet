@@ -32,7 +32,7 @@ class ContenidoController
     }
 
     // Llamar al servicio
-    $resultado = ContenidoService::guardarTitulo(
+    return ContenidoService::guardarTitulo(
       $datos['isbn'],
       $datos['titulo'],
       $datos['autor'] ?? null,
@@ -44,10 +44,5 @@ class ContenidoController
       $datos['revista'] ?? null
     );
 
-    if (str_starts_with($resultado, 'Error')) {
-      return ['status' => 409, 'message' => $resultado]; // Conflicto (duplicado)
-    }
-
-    return ['status' => 201, 'message' => $resultado]; // Creado con éxito
   }
 }

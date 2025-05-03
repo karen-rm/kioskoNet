@@ -41,6 +41,10 @@
     <input type="submit" value="Enviar">
   </form>
 
+  <div id="catalogo">
+    
+  </div>
+
   <!-- Incluir archivo JavaScript con AJAX -->
     <script src="../ajax/contenido.js"></script>
 </body>

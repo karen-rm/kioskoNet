@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
   $('#agregarTituloForm').submit(function (e) {
     e.preventDefault(); // Previene que se recargue la página
 
@@ -18,4 +19,6 @@ $(document).ready(function () {
       },
     });
   });
+
+  
 });
