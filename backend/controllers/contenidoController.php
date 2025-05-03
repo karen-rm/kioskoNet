@@ -6,31 +6,33 @@ use App\Services\ContenidoService;
 
 class ContenidoController
 {
-
-  // Método para agregar un nuevo título
   public static function agregarTitulo($datos)
   {
-    // Validar campos requeridos
+    if (!is_array($datos)) {
+      return ['status' => 400, 'message' => 'No se recibieron datos válidos'];
+    }
 
+    $requeridosRevista = ['isbn', 'titulo', 'revista', 'editorial', 'anio', 'genero', 'precio', 'categoria'];
+    $requeridos = ['isbn', 'titulo', 'autor', 'editorial', 'anio', 'genero', 'precio', 'categoria'];
 
-    if ($datos['categoria'] === 'Revista') {
-      $requeridos = ['isbn', 'titulo', 'revista', 'editorial', 'anio', 'genero', 'precio', 'categoria'];
-      foreach ($requeridos as $campo) {
+    $categoria = $datos['categoria'] ?? '';
+
+    if ($categoria === 'Revista') {
+      foreach ($requeridosRevista as $campo) {
         if (empty($datos[$campo])) {
-          return "Error: El campo '$campo' es obligatorio.";
+          return ['status' => 422, 'message' => "Error: El campo '$campo' es obligatorio para revistas."];
         }
       }
     } else {
-      $requeridos = ['isbn', 'titulo', 'autor', 'editorial', 'anio', 'genero', 'precio', 'categoria'];
       foreach ($requeridos as $campo) {
         if (empty($datos[$campo])) {
-          return "Error: El campo '$campo' es obligatorio.";
+          return ['status' => 422, 'message' => "Error: El campo '$campo' es obligatorio para libros."];
         }
       }
     }
 
-    // Llamamos al servicio
-    return ContenidoService::guardarTitulo(
+    // Llamar al servicio
+    $resultado = ContenidoService::guardarTitulo(
       $datos['isbn'],
       $datos['titulo'],
       $datos['autor'] ?? null,
@@ -41,5 +43,11 @@ class ContenidoController
       $datos['categoria'],
       $datos['revista'] ?? null
     );
+
+    if (str_starts_with($resultado, 'Error')) {
+      return ['status' => 409, 'message' => $resultado]; // Conflicto (duplicado)
+    }
+
+    return ['status' => 201, 'message' => $resultado]; // Creado con éxito
   }
 }

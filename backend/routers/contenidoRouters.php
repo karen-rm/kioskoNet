@@ -12,13 +12,20 @@ $app->get('/prueba', function (Request $request, Response $response) {
 
 $app->post('/agregar-titulo', function (Request $request, Response $response) {
     $datos = $request->getParsedBody();
-    // Llamar al controlador
     $resultado = ContenidoController::agregarTitulo($datos);
 
-    // Responder al cliente
-    $response->getBody()->write($resultado);
-    return $response->withHeader('Content-Type', 'text/plain');
+    $status = $resultado['status'] ?? 500;
+    $json = json_encode([
+        'status' => $status,
+        'message' => $resultado['message'] ?? 'Error desconocido'
+    ]);
+
+    $response->getBody()->write($json);
+    return $response
+        ->withStatus($status)
+        ->withHeader('Content-Type', 'application/json');
 });
+
 
 error_log("Rutas cargadas correctamente desde contenidoRouters.php");
 
