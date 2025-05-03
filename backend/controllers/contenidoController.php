@@ -2,58 +2,27 @@
 
 namespace App\Controllers;
 
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
 use App\Services\ContenidoService;
 
 class ContenidoController
 {
-  private $contenidoService;
-
-  public function __construct()
-  {
-    $this->contenidoService = new ContenidoService(); // Instanciamos el servicio
-  }
-
-
+  
   // Método para agregar un nuevo título
-  public function agregarTitulo(Request $request, Response $response, $args)
+  public static function agregarTitulo($datos)
   {
-    // Obtener los datos del cuerpo de la solicitud
-    $data = $request->getParsedBody();
+  
+    $titulo = $datos['titulo'];
+    $isbn = $datos['isbn'];
+    $titulo = $datos['titulo'];
+    $autor = $datos['autor'];
+    $editorial = $datos['editorial'];
+    $anio = $datos['anio'];
+    $genero = $datos['genero'];
+    $precio = $datos['precio'];
+    $categoria = $datos["categoria"];
 
-
-    // Extraer los valores del formulario
-    $isbn = $data['isbn'];
-    $titulo = $data['titulo'];
-    $autor = $data['autor'];
-    $editorial = $data['editorial'];
-    $anio = $data['anio'];
-    $genero = $data['genero'];
-    $precio = $data['precio'];
-    $categoria = $request["categoria"];
-
-    // Organizar los datos para agregar al Catalogo
-    $catalogoData = [
-      'titulo' => $titulo,
-    ];
-
-    // Organizar los datos para agregar a Detalles
-    $detallesData = [
-      'autor' => $autor,
-      'anio' => $anio,
-      'editorial' => $editorial,
-      'genero' => $genero,
-      'precio' => $precio,
-      'titulo' => $titulo,
-    ];
-
-    // Llamar al servicio para verificar si el título ya existe
-    $result = $this->contenidoService->agregarTitulo($isbn, $categoria, $catalogoData, $detallesData);
-
-    // Devolver la respuesta del servicio
-    $response->getBody()->write($result);
-    return $response;
+    // Llamamos al servicio
+    return ContenidoService::guardarTitulo($isbn, $titulo, $autor, $editorial, $anio, $genero, $precio, $categoria);
   }
 
   

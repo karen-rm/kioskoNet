@@ -13,37 +13,44 @@ class ContenidoModel
     $this->firebase = new FireBase("kioskonet-fc6a6-default-rtdb");
   }
 
-  
+
   // Función para verificar si el ISBN ya existe
   public function verificarTituloExistente($isbn, $categoria)
   {
-      // Solicitud GET
-      $response = $this->firebase->request('Catalogo/' . $categoria, $isbn, 'GET');
+    // Hacemos la solicitud GET
+    $response = $this->firebase->request('Catalogo/' . $categoria, $isbn, 'GET');
 
-      // Si la respuesta está vacía o contiene un error, significa que no existe
-      $decoded = json_decode($response);
+    // Intentamos decodificar
+    $decoded = json_decode($response, true); // ← usamos true para array asociativo
 
-      if (empty($decoded)) {
-          return false; // No existe
-      } else {
-          return true; // El título ya existe
-      }
+    // Si hay un error o el documento no existe (devuelve null)
+    if (isset($decoded['error']) || is_null($decoded)) {
+      return false; // No existe
+    }
+
+    // Si está vacío como array vacío o string vacío
+    if (is_array($decoded) && count($decoded) === 0) {
+      return false; // No existe
+    }
+
+    return true; // Existe
   }
+
 
 
 
   // Agregar un título a Firebase
-  public function agregarTitulo($isbn, $categoria, $data)
+  public function agregarTitulo($isbn, $categoria, $titulo)
   {
-    return $this->firebase->request('Catalogo/' . $categoria, $isbn, 'POST', $data);
-  }
-
-    public function agregarDetalles($isbn, $data)
-  {
-    return $this->firebase->request('Detalles/' , $isbn, 'POST', $data);
+    // El título se manda como string, no como array u objeto
+    return $this->firebase->request('Catalogo/' . $categoria . '/' . $isbn, '', 'PUT', $titulo);
   }
 
 
 
-  
+
+  public function agregarDetalles($isbn, $data)
+  {
+    return $this->firebase->request('Detalles/', $isbn, 'PUT', $data);
+  }
 }

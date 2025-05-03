@@ -6,34 +6,35 @@ use App\Models\ContenidoModel;
 
 class ContenidoService
 {
-  private $contenidoModel;
 
-  public function __construct()
+
+  public static function guardarTitulo($isbn, $titulo, $autor, $editorial, $anio, $genero, $precio, $categoria)
   {
-    $this->contenidoModel = new ContenidoModel(); // Instanciamos el modelo
-  }
+    $modelo = new ContenidoModel();
 
- public function agregarTitulo($isbn, $categoria,  $catalogoData, $detallesData)
-{
-    // Verificar si el título ya existe en la base de datos (Catalogo)
-    $tituloExistente = $this->contenidoModel->verificarTituloExistente($isbn, $categoria);
-    
-    if ($tituloExistente) {
-        // Si el título ya existe, devolver un mensaje de error
-        return json_encode(['error' => 'El título con este ISBN ya existe.']);
+    // Verificar si ya existe
+    if ($modelo->verificarTituloExistente($isbn, $categoria)) {
+      return "El título con ISBN {$isbn} ya existe en la categoría '{$categoria}'";
     }
 
-    // Si no existe, agregar el título al Catalogo
-    $this->contenidoModel->agregarTitulo($isbn,$categoria, $catalogoData);
-
-    // Agregar los detalles a la colección Detalles
-    $this->contenidoModel->agregarDetalles($isbn, $detallesData);
-
-    // Devolver el éxito
-    return json_encode(['success' => 'Título agregado con éxito.']);
-}
+    // Datos para guardar
+    // Solo pasamos el valor plano del título
+    $resCatalogo = $modelo->agregarTitulo($isbn, $categoria, $titulo);
 
 
+    $datosDetalles = [
+      'Autor' => $autor,
+      'Año publicacion' => $anio,
+      'Editorial' => $editorial,
+      'Genero' => $genero,
+      'Precio' => $precio,
+      'Titulo' => $titulo,
+    ];
 
+    // Guardar en Firebase
+    $resCatalogo = $modelo->agregarTitulo($isbn, $categoria, $resCatalogo);
+    $resDetalles = $modelo->agregarDetalles($isbn, $datosDetalles);
 
+    return "Título agregado correctamente. \nCatálogo: $resCatalogo \nDetalles: $resDetalles";
+  }
 }

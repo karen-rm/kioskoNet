@@ -5,7 +5,7 @@ namespace KioskoNet;
 class FireBase
 {
   private $proyecto;
- 
+
   public function __construct($proyecto)
   {
     $this->proyecto = $proyecto;
@@ -31,9 +31,11 @@ class FireBase
 
     // Si hay datos, codificarlos como JSON
     if ($data !== null) {
-      curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+      $jsonData = is_string($data) ? '"' . addslashes($data) . '"' : json_encode($data);
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
       curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
     }
+
 
     // Ejecutar petición
     $response = curl_exec($ch);

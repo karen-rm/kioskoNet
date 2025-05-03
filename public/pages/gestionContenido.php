@@ -17,7 +17,7 @@
     <label for="titulo">Titulo:</label><br>
     <input type="text" id="titulo" name="titulo" required><br><br>
 
-    <label for="categoria">Categotia:</label><br>
+    <label for="categoria">Categoria:</label><br>
     <input type="text" id="categoria" name="categoria" required><br><br>
 
     <label for="autor">Autor:</label><br>

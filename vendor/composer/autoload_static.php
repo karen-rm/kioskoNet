@@ -30,10 +30,18 @@ class ComposerStaticInit026509606a55be5c56c243e48adc6597
         array (
             'Nyholm\\Psr7\\' => 12,
         ),
+        'K' => 
+        array (
+            'KioskoNet\\' => 10,
+        ),
         'F' => 
         array (
             'Fig\\Http\\Message\\' => 17,
             'FastRoute\\' => 10,
+        ),
+        'A' => 
+        array (
+            'App\\' => 4,
         ),
     );
 
@@ -72,6 +80,10 @@ class ComposerStaticInit026509606a55be5c56c243e48adc6597
         array (
             0 => __DIR__ . '/..' . '/nyholm/psr7/src',
         ),
+        'KioskoNet\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/backend/firebase',
+        ),
         'Fig\\Http\\Message\\' => 
         array (
             0 => __DIR__ . '/..' . '/fig/http-message-util/src',
@@ -79,6 +91,10 @@ class ComposerStaticInit026509606a55be5c56c243e48adc6597
         'FastRoute\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/fast-route/src',
+        ),
+        'App\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/backend',
         ),
     );
 
