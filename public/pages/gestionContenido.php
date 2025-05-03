@@ -21,10 +21,13 @@
     <input type="text" id="categoria" name="categoria" required><br><br>
 
     <label for="autor">Autor:</label><br>
-    <input type="text" id="autor" name="autor" required><br><br>
+    <input type="text" id="autor" name="autor" ><br><br>
 
     <label for="editorial">Editorial:</label><br>
     <input type="text" id="editorial" name="editorial" required><br><br>
+
+    <label for="revista">Revista:</label><br>
+    <input type="text" id="revista" name="revista" ><br><br>
 
     <label for="anio">Año de publicación:</label><br>
     <input type="text" id="anio" name="anio" required><br><br>

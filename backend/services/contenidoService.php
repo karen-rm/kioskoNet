@@ -8,7 +8,7 @@ class ContenidoService
 {
 
 
-  public static function guardarTitulo($isbn, $titulo, $autor, $editorial, $anio, $genero, $precio, $categoria)
+  public static function guardarTitulo($isbn, $titulo, $autor, $editorial, $anio, $genero, $precio, $categoria, $revista)
   {
     $modelo = new ContenidoModel();
 
@@ -18,22 +18,27 @@ class ContenidoService
     }
 
     // Datos para guardar
-    // Solo pasamos el valor plano del título
+    
     $resCatalogo = $modelo->agregarTitulo($isbn, $categoria, $titulo);
-
-
-    $datosDetalles = [
-      'Autor' => $autor,
-      'Año publicacion' => $anio,
-      'Editorial' => $editorial,
-      'Genero' => $genero,
-      'Precio' => $precio,
-      'Titulo' => $titulo,
+    
+    // Detalles dependiendo del tipo
+    $detalles = [
+        'Editorial' => $editorial,
+        'Año publicacion' => $anio,
+        'Genero' => $genero,
+        'Precio' => $precio,
+        'Titulo' => $titulo,
     ];
+
+    if ($categoria === 'Revista') {
+        $detalles['Revista'] = $revista;
+    } else {
+        $detalles['Autor'] = $autor;
+    }
 
     // Guardar en Firebase
     $resCatalogo = $modelo->agregarTitulo($isbn, $categoria, $resCatalogo);
-    $resDetalles = $modelo->agregarDetalles($isbn, $datosDetalles);
+    $resDetalles = $modelo->agregarDetalles($isbn, $detalles);
 
     return "Título agregado correctamente. \nCatálogo: $resCatalogo \nDetalles: $resDetalles";
   }
