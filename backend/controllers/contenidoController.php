@@ -2,59 +2,47 @@
 
 namespace App\Controllers;
 
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
 use App\Services\ContenidoService;
 
 class ContenidoController
 {
-  private $contenidoService;
-
-  public function __construct()
+  public static function agregarTitulo($datos)
   {
-    $this->contenidoService = new ContenidoService(); // Instanciamos el servicio
+    if (!is_array($datos)) {
+      return ['status' => 400, 'message' => 'No se recibieron datos válidos'];
+    }
+
+    $requeridosRevista = ['isbn', 'titulo', 'revista', 'editorial', 'anio', 'genero', 'precio', 'categoria'];
+    $requeridos = ['isbn', 'titulo', 'autor', 'editorial', 'anio', 'genero', 'precio', 'categoria'];
+
+    $categoria = $datos['categoria'] ?? '';
+
+    if ($categoria === 'Revista') {
+      foreach ($requeridosRevista as $campo) {
+        if (empty($datos[$campo])) {
+          return ['status' => 422, 'message' => "Error: El campo '$campo' es obligatorio para revistas."];
+        }
+      }
+    } else {
+      foreach ($requeridos as $campo) {
+        if (empty($datos[$campo])) {
+          return ['status' => 422, 'message' => "Error: El campo '$campo' es obligatorio para libros."];
+        }
+      }
+    }
+
+    // Llamar al servicio
+    return ContenidoService::guardarTitulo(
+      $datos['isbn'],
+      $datos['titulo'],
+      $datos['autor'] ?? null,
+      $datos['editorial'],
+      $datos['anio'],
+      $datos['genero'],
+      $datos['precio'],
+      $datos['categoria'],
+      $datos['revista'] ?? null
+    );
+
   }
-
-
-  // Método para agregar un nuevo título
-  public function agregarTitulo(Request $request, Response $response, $args)
-  {
-    // Obtener los datos del cuerpo de la solicitud
-    $data = $request->getParsedBody();
-
-
-    // Extraer los valores del formulario
-    $isbn = $data['isbn'];
-    $titulo = $data['titulo'];
-    $autor = $data['autor'];
-    $editorial = $data['editorial'];
-    $anio = $data['anio'];
-    $genero = $data['genero'];
-    $precio = $data['precio'];
-    $categoria = $request["categoria"];
-
-    // Organizar los datos para agregar al Catalogo
-    $catalogoData = [
-      'titulo' => $titulo,
-    ];
-
-    // Organizar los datos para agregar a Detalles
-    $detallesData = [
-      'autor' => $autor,
-      'anio' => $anio,
-      'editorial' => $editorial,
-      'genero' => $genero,
-      'precio' => $precio,
-      'titulo' => $titulo,
-    ];
-
-    // Llamar al servicio para verificar si el título ya existe
-    $result = $this->contenidoService->agregarTitulo($isbn, $categoria, $catalogoData, $detallesData);
-
-    // Devolver la respuesta del servicio
-    $response->getBody()->write($result);
-    return $response;
-  }
-
-  
 }

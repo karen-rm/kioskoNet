@@ -6,34 +6,62 @@ use App\Models\ContenidoModel;
 
 class ContenidoService
 {
-  private $contenidoModel;
-
-  public function __construct()
+  public static function guardarTitulo($isbn, $titulo, $autor, $editorial, $anio, $genero, $precio, $categoria, $revista)
   {
-    $this->contenidoModel = new ContenidoModel(); // Instanciamos el modelo
-  }
+    $modelo = new ContenidoModel();
 
- public function agregarTitulo($isbn, $categoria,  $catalogoData, $detallesData)
-{
-    // Verificar si el título ya existe en la base de datos (Catalogo)
-    $tituloExistente = $this->contenidoModel->verificarTituloExistente($isbn, $categoria);
-    
-    if ($tituloExistente) {
-        // Si el título ya existe, devolver un mensaje de error
-        return json_encode(['error' => 'El título con este ISBN ya existe.']);
+    // Verificar duplicado
+    if ($modelo->verificarTituloExistente($isbn, $categoria)) {
+      return [
+        'status' => 409,
+        'message' => "El título con ISBN {$isbn} ya existe en la categoría '{$categoria}'"
+      ];
     }
 
-    // Si no existe, agregar el título al Catalogo
-    $this->contenidoModel->agregarTitulo($isbn,$categoria, $catalogoData);
+    // Guardar en catálogo
+    $resCatalogo = $modelo->agregarTitulo($isbn, $categoria, $titulo);
 
-    // Agregar los detalles a la colección Detalles
-    $this->contenidoModel->agregarDetalles($isbn, $detallesData);
+    // Preparar detalles
+    $detalles = [
+      'Editorial' => $editorial,
+      'Año publicacion' => $anio,
+      'Genero' => $genero,
+      'Precio' => $precio,
+      'Titulo' => $titulo,
+    ];
 
-    // Devolver el éxito
-    return json_encode(['success' => 'Título agregado con éxito.']);
-}
+    if ($categoria === 'Revista') {
+      $detalles['Revista'] = $revista;
+    } else {
+      $detalles['Autor'] = $autor;
+    }
 
+    // Guardar detalles
+    $resDetalles = $modelo->agregarDetalles($isbn, $detalles);
 
+    // Validar respuestas de Firebase (opcional)
+    $catalogoError = strpos($resCatalogo, 'error') !== false;
+    $detallesError = strpos($resDetalles, 'error') !== false;
 
+    if ($catalogoError || $detallesError) {
+      return [
+        'status' => 500,
+        'message' => "Error al guardar en Firebase.",
+        'data' => [
+          'catalogo' => $resCatalogo,
+          'detalles' => $resDetalles
+        ]
+      ];
+    }
 
+    // Todo bien
+    return [
+      'status' => 201,
+      'message' => "Título agregado correctamente.",
+      'data' => [
+        'isbn' => $isbn,
+        'categoria' => $categoria
+      ]
+    ];
+  }
 }
