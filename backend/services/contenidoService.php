@@ -6,62 +6,73 @@ use App\Models\ContenidoModel;
 
 class ContenidoService
 {
-  public static function guardarTitulo($isbn, $titulo, $autor, $editorial, $anio, $genero, $precio, $categoria, $revista)
-  {
-    $modelo = new ContenidoModel();
+    private $modelo;
 
-    // Verificar duplicado
-    if ($modelo->verificarTituloExistente($isbn, $categoria)) {
-      return [
-        'status' => 409,
-        'message' => "El título con ISBN {$isbn} ya existe en la categoría '{$categoria}'"
-      ];
+    public function __construct()
+    {
+        $this->modelo = new ContenidoModel();
     }
 
-    // Guardar en catálogo
-    $resCatalogo = $modelo->agregarTitulo($isbn, $categoria, $titulo);
-
-    // Preparar detalles
-    $detalles = [
-      'Editorial' => $editorial,
-      'Año publicacion' => $anio,
-      'Genero' => $genero,
-      'Precio' => $precio,
-      'Titulo' => $titulo,
-    ];
-
-    if ($categoria === 'Revista') {
-      $detalles['Revista'] = $revista;
-    } else {
-      $detalles['Autor'] = $autor;
+    public function obtenerCatalogo(){
+      return $this->modelo->obtenerCatalogo(); 
     }
 
-    // Guardar detalles
-    $resDetalles = $modelo->agregarDetalles($isbn, $detalles);
+    public function guardarTitulo($isbn, $titulo, $autor, $editorial, $anio, $genero, $precio, $categoria, $revista)
+    {
+        // Verificar duplicado
+        if ($this->modelo->verificarTituloExistente($isbn, $categoria)) {
+            return [
+                'status' => 409,
+                'message' => "El título con ISBN {$isbn} ya existe en la categoría '{$categoria}'"
+            ];
+        }
 
-    // Validar respuestas de Firebase (opcional)
-    $catalogoError = strpos($resCatalogo, 'error') !== false;
-    $detallesError = strpos($resDetalles, 'error') !== false;
+        // Guardar en catálogo
+        $resCatalogo = $this->modelo->agregarTitulo($isbn, $categoria, $titulo);
 
-    if ($catalogoError || $detallesError) {
-      return [
-        'status' => 500,
-        'message' => "Error al guardar en Firebase.",
-        'data' => [
-          'catalogo' => $resCatalogo,
-          'detalles' => $resDetalles
-        ]
-      ];
+        // Preparar detalles
+        $detalles = [
+            'Editorial' => $editorial,
+            'Año publicacion' => $anio,
+            'Genero' => $genero,
+            'Precio' => $precio,
+            'Titulo' => $titulo,
+        ];
+
+        if ($categoria === 'Revista') {
+            $detalles['Revista'] = $revista;
+        } else {
+            $detalles['Autor'] = $autor;
+        }
+
+        // Guardar detalles
+        $resDetalles = $this->modelo->agregarDetalles($isbn, $detalles);
+
+        // Verificar errores de Firebase
+        $catalogoError = strpos($resCatalogo, 'error') !== false;
+        $detallesError = strpos($resDetalles, 'error') !== false;
+
+        if ($catalogoError || $detallesError) {
+            return [
+                'status' => 500,
+                'message' => "Error al guardar en Firebase.",
+                'data' => [
+                    'catalogo' => $resCatalogo,
+                    'detalles' => $resDetalles
+                ]
+            ];
+        }
+
+        // Todo bien
+        return [
+            'status' => 201,
+            'message' => "Título agregado correctamente.",
+            'data' => [
+                'isbn' => $isbn,
+                'categoria' => $categoria,
+                'catalogo' => $resCatalogo,
+                'detalles' => $resDetalles
+            ]
+        ];
     }
-
-    // Todo bien
-    return [
-      'status' => 201,
-      'message' => "Título agregado correctamente.",
-      'data' => [
-        'isbn' => $isbn,
-        'categoria' => $categoria
-      ]
-    ];
-  }
 }
