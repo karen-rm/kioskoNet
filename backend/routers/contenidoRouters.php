@@ -58,6 +58,26 @@ $app->post('/editar-titulo', function (Request $request, Response $response){
 
 }); 
 
+$app->delete('/eliminar-titulo', function (Request $request, Response $response) {
+    $datos = json_decode($request->getBody()->getContents(), true);
+
+    
+    $controller = new ContenidoController();
+    $resultado = $controller->eliminarTitulo($datos);
+
+    $status = $resultado['status'] ?? 503;
+    $json = json_encode([
+        'status' => $status,
+        'message' => $resultado['message'] ?? 'Error desconocido en el servidor al eliminar'
+    ]);
+
+    $response->getBody()->write($json);
+    return $response
+        ->withStatus($status)
+        ->withHeader('Content-Type', 'application/json');
+});
+
+
 
 error_log("Rutas cargadas correctamente desde contenidoRouters.php");
 

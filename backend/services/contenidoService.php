@@ -13,8 +13,9 @@ class ContenidoService
         $this->modelo = new ContenidoModel();
     }
 
-    public function obtenerCatalogo(){
-      return $this->modelo->obtenerCatalogo(); 
+    public function obtenerCatalogo()
+    {
+        return $this->modelo->obtenerCatalogo();
     }
 
     public function guardarTitulo($isbn, $titulo, $autor, $editorial, $anio, $genero, $precio, $categoria, $revista)
@@ -73,6 +74,89 @@ class ContenidoService
                 'catalogo' => $resCatalogo,
                 'detalles' => $resDetalles
             ]
+        ];
+    }
+
+    public function editarTitulo($isbn, $titulo, $autor, $editorial, $anio, $genero, $precio, $categoria, $revista)
+    {
+
+        if (!$this->modelo->verificarTituloExistente($isbn, $categoria)) {
+            return ['status' => 404, 'message' => "El título no existe y no se puede editar."];
+        }
+
+        $resCatalogo = $this->modelo->agregarTitulo($isbn, $categoria, $titulo);
+        
+        // Preparar detalles
+        $detalles = [
+            'Editorial' => $editorial,
+            'Año publicacion' => $anio,
+            'Genero' => $genero,
+            'Precio' => $precio,
+            'Titulo' => $titulo,
+        ];
+
+        if ($categoria === 'Revista') {
+            $detalles['Revista'] = $revista;
+        } else {
+            $detalles['Autor'] = $autor;
+        }
+
+        // Guardar detalles
+        $resDetalles = $this->modelo->agregarDetalles($isbn, $detalles);
+
+        // Verificar errores de Firebase
+        $catalogoError = strpos($resCatalogo, 'error') !== false;
+        $detallesError = strpos($resDetalles, 'error') !== false;
+
+        if ($catalogoError || $detallesError) {
+            return [
+                'status' => 500,
+                'message' => "Error al editar en Firebase.",
+                'data' => [
+                    'catalogo' => $resCatalogo,
+                    'detalles' => $resDetalles
+                ]
+            ];
+        }
+
+        // Todo bien
+        return [
+            'status' => 201,
+            'message' => "Título agregado correctamente.",
+            'data' => [
+                'isbn' => $isbn,
+                'categoria' => $categoria,
+                'catalogo' => $resCatalogo,
+                'detalles' => $resDetalles
+            ]
+        ];
+    }
+
+    public function eliminarTitulo($isbn, $categoria)
+    {
+        if (!$this->modelo->verificarTituloExistente($isbn, $categoria)) {
+            return [
+                'status' => 404,
+                'message' => "El título con ISBN {$isbn} no existe en la categoría '{$categoria}'."
+            ];
+        }
+
+
+        $resTitulo = $this->modelo->eliminarTitulo($isbn, $categoria);
+        $resDetalles = $this->modelo->eliminarDetalles($isbn);
+
+
+        if ($resTitulo === false || $resDetalles === false) {
+            return [
+                'status' => 500,
+                'message' => "Error al eliminar los datos en Firebase."
+            ];
+        }
+
+
+        return [
+            'status' => 200,
+            'message' => "Título eliminado correctamente."
         ];
     }
 }

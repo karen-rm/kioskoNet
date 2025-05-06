@@ -6,22 +6,23 @@ use App\Services\ContenidoService;
 
 class ContenidoController
 {
-  private $servicio; 
+  private $servicio;
 
   public function __construct()
   {
     $this->servicio = new ContenidoService();
   }
 
-  public function obtenerCatalogo(){
-    return $this->servicio->obtenerCatalogo(); 
+  public function obtenerCatalogo()
+  {
+    return $this->servicio->obtenerCatalogo();
   }
 
   public function agregarTitulo($datos)
   {
     $validacion = $this->verificarCampos($datos);
     if ($validacion !== null) {
-        return $validacion; 
+      return $validacion;
     }
 
     // Llamar al servicio
@@ -36,18 +37,33 @@ class ContenidoController
       $datos['categoria'],
       $datos['revista'] ?? null
     );
-
   }
 
-  public function editarTitulo($datos){
-    $validacion = self::verificarCampos($datos);
+  public function editarTitulo($datos)
+  {
+    $validacion = $this->verificarCampos($datos);
     if ($validacion !== null) {
-        return $validacion; 
+      return $validacion;
     }
+
+    // Llamar al servicio
+    return $this->servicio->editarTitulo(
+      $datos['isbn'],
+      $datos['titulo'],
+      $datos['autor'] ?? null,
+      $datos['editorial'],
+      $datos['anio'],
+      $datos['genero'],
+      $datos['precio'],
+      $datos['categoria'],
+      $datos['revista'] ?? null
+    );
+
   }
 
-  public function verificarCampos($datos){
-    
+  public function verificarCampos($datos)
+  {
+
     if (!is_array($datos)) {
       return ['status' => 400, 'message' => 'No se recibieron datos válidos'];
     }
@@ -71,7 +87,20 @@ class ContenidoController
       }
     }
 
-    return null; 
+    return null;
   }
 
+  public function eliminarTitulo($datos)
+  {
+
+    if (empty($datos['isbn']) || empty($datos['categoria'])) {
+      return ['status' => 400, 'message' => 'Datos incompletos para eliminar titulo.'];
+    }
+
+    // Llamar al servicio
+    return $this->servicio->eliminarTitulo(
+      $datos['isbn'],
+      $datos['categoria'],
+    );
+  }
 }
