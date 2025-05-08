@@ -53,4 +53,33 @@ class ContenidoModel
   {
     return $this->firebase->request('Detalles/', $isbn, 'PUT', $data);
   }
+
+  public function obtenerCatalogo()
+  {
+    $response = $this->firebase->request('Catalogo/', '', 'GET');
+
+    error_log("Respuesta bruta: $response");
+
+    if (empty($response) || $response === 'null') {
+      return [];
+    }
+
+    $decoded = json_decode($response, true);
+
+    if (json_last_error() !== JSON_ERROR_NONE) {
+      error_log("Error al decodificar: " . json_last_error_msg());
+      return [];
+    }
+
+    return $decoded;
+  }
+
+  public function eliminarTitulo($isbn, $categoria){
+    return $this->firebase->request("Catalogo/{$categoria}", $isbn, 'DELETE');
+  }
+
+  public function eliminarDetalles($isbn){
+    return $this->firebase->request('Detalles/', $isbn, 'DELETE', null);
+  }
+
 }
