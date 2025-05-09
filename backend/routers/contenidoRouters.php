@@ -4,7 +4,6 @@ use App\Controllers\ContenidoController;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-
 $app->get('/prueba', function (Request $request, Response $response) {
     $response->getBody()->write("Ruta de prueba OK");
     return $response;
@@ -17,6 +16,31 @@ $app->get('/obtener-catalogo', function ($request, Response $response) {
     $response->getBody()->write(json_encode($resultado));
     return $response
         ->withStatus(200)
+        ->withHeader('Content-Type', 'application/json');
+});
+
+$app->post('/recuperar-detalles', function (Request $request, Response $response) {
+
+    
+    $datos = $request->getParsedBody();
+    error_log('ISBN recibido: ' . json_encode($datos));  
+
+    
+    $controller = new ContenidoController();
+    $resultado = $controller->obtenerDetalles($datos);  
+
+    
+    $status = $resultado['status'] ?? 500;
+    $json = json_encode([
+        'status' => $status,
+        'message' => $resultado['message'] ?? 'Error desconocido',
+        'detalles' => $resultado['detalles'] ?? null  
+    ]);
+
+
+    $response->getBody()->write($json);
+    return $response
+        ->withStatus($status)
         ->withHeader('Content-Type', 'application/json');
 });
 

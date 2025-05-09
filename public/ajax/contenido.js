@@ -1,11 +1,13 @@
 $(document).ready(function () {
-
   //Control de la navbar
   const links = document.querySelectorAll('nav a');
   const modal = document.getElementById('Modal');
   const openModalBtn = document.getElementById('openModalBtn');
   const closeModalBtn = document.getElementById('closeModalBtn');
   const btnSalir = document.getElementById('btnLogout');
+  const categoriaSelect = document.getElementById('categoria');
+  const autorField = document.getElementById('autor');
+  const revistaField = document.getElementById('revista');
 
   links.forEach((link) => {
     link.addEventListener('click', function () {
@@ -34,17 +36,31 @@ $(document).ready(function () {
     }
   };
 
-  //Botón cerrar sesión 
-  btnSalir.addEventListener("click", () =>{
-    window.location.href = "../pages/login.html";
+  //Botón cerrar sesión
+  btnSalir.addEventListener('click', () => {
+    window.location.href = '../pages/login.html';
   });
 
-  
+  categoriaSelect.addEventListener('change', function () {
+    const selectedValue = categoriaSelect.value;
+
+    if (selectedValue === 'Revista') {
+      
+      autorField.closest('.form-row').style.display = 'none'; // Ocultamos el campo "Autor"
+      revistaField.closest('.form-row').style.display = 'block'; // Mostramos el campo "Revista"
+    } else {
+      
+      autorField.closest('.form-row').style.display = 'block'; // Mostramos el campo "Autor"
+      revistaField.closest('.form-row').style.display = 'none'; // Ocultamos el campo "Revista"
+    }
+  });
+
+  // Ejecutamos el cambio por defecto si hay un valor ya seleccionado
+  categoriaSelect.dispatchEvent(new Event('change'));
 
   $('#agregarTituloForm').submit(function (e) {
-    e.preventDefault(); // Previene que se recargue la página
-
-    const datosFormulario = $(this).serialize(); // Recupera los datos del form
+    e.preventDefault(); 
+    const datosFormulario = $(this).serialize(); 
 
     $.ajax({
       url: 'http://localhost:8080/ServiciosWeb/ProyectoFinal/kioskoNet/public/agregar-titulo',
@@ -62,38 +78,108 @@ $(document).ready(function () {
   });
 
   function cargarTabla() {
-    $.ajax({
-      url: 'http://localhost:8080/ServiciosWeb/ProyectoFinal/kioskoNet/public/obtener-catalogo',
-      type: 'GET',
-      success: function (respuesta) {
-        const tabla = $('#tabla-catalogo tbody');
-        tabla.empty(); // limpiar tabla
+  $.ajax({
+    url: 'http://localhost:8080/ServiciosWeb/ProyectoFinal/kioskoNet/public/obtener-catalogo',
+    type: 'GET',
+    success: function (respuesta) {
+      console.log(respuesta);
+      const tabla = $('#tabla-catalogo tbody');
+      tabla.empty(); // Limpiar tabla
 
-        Object.entries(respuesta).forEach(([categoria, items]) => {
-          const filaCategoria = `
-          <tr style="background-color: #eee;">
-            <td colspan="4"><strong>${categoria}</strong></td>
+      Object.entries(respuesta).forEach(([categoria, items]) => {
+        const filaCategoria = `
+        <tr style="background-color: #eee;">
+          <td colspan="4"><strong>${categoria}</strong></td>
+        </tr>`;
+        tabla.append(filaCategoria);
+
+        Object.entries(items).forEach(([isbn, titulo]) => {
+          const fila = `
+          <tr class="fila-catalogo" data-isbn="${isbn}" data-cat="${categoria}">
+            <td>${isbn}</td>
+            <td>${titulo}</td>
+            <td>${categoria}</td>
+            <td><button class="eliminar" data-isbn="${isbn}" data-cat="${categoria}">Eliminar</button></td>
           </tr>`;
-          tabla.append(filaCategoria);
 
-          Object.entries(items).forEach(([isbn, titulo]) => {
-            const fila = `
-            <tr>
-              <td>${isbn}</td>
-              <td>${titulo}</td>
-              <td>${categoria}</td>
-              <td><button class="eliminar" data-isbn="${isbn}" data-cat="${categoria}">Eliminar</button></td>
-            </tr>`;
-            tabla.append(fila);
-          });
+          // Crear la fila de detalles
+          const filaDetalles = `
+          <tr class="detalles-fila" style="display: none;">
+            <td colspan="4" style="background-color: #f9f9f9; padding: 10px;">
+              <strong>Detalles:</strong><br>
+              <p><b>ISBN:</b> ${isbn}</p>
+              <p><b>Título:</b> ${titulo}</p>
+              <p><b>Categoría:</b> ${categoria}</p>
+              <div class="detalles-especificos">
+                <p id="detalles-${isbn}"><b>Cargando detalles...</b></p>
+              </div>
+              <button class="editar">Editar</button>
+            </td>
+          </tr>`;
+
+          tabla.append(fila);
+          tabla.append(filaDetalles);
         });
-      },
-      error: function (xhr) {
-        alert('Error al cargar el catálogo');
-        console.error(xhr.responseText);
-      },
-    });
-  }
+      });
+
+      // Evento de clic para mostrar/ocultar detalles
+      $('.fila-catalogo').on('click', function () {
+        const isbn = $(this).data('isbn');
+        console.log('presiono el producto con isbn: ' + isbn);
+        const categoria = $(this).data('cat');
+        const filaDetalles = $(this).next('.detalles-fila'); // Obtener la siguiente fila (detalles)
+
+        
+        filaDetalles.toggle(); 
+
+        // Si los detalles aún no han sido cargados, obtén los detalles
+        const detallesDiv = filaDetalles.find(`#detalles-${isbn}`);
+        console.log(isbn); 
+        if (detallesDiv.text() === "Cargando detalles...") {
+          $.ajax({
+            url: 'http://localhost:8080/ServiciosWeb/ProyectoFinal/kioskoNet/public/recuperar-detalles',
+            type: 'POST',
+            data: JSON.stringify({ isbn: isbn }),
+            contentType: 'application/json',
+            success: function (respuesta) {
+              console.log(respuesta); 
+              if (respuesta.success && respuesta.detalles) {
+                // Actualizar los detalles con la respuesta
+                detallesDiv.html(`
+                  <p><b>Autor:</b> ${respuesta.detalles.Autor || 'N/A'}</p>
+                  <p><b>Género:</b> ${respuesta.detalles.Genero || 'N/A'}</p>
+                  <p><b>Precio:</b> ${respuesta.detalles.Precio || 'N/A'}</p>
+                `);
+              } else {
+                detallesDiv.html('<p><b>Detalles no disponibles.</b></p>');
+              }
+            },
+            error: function (xhr) {
+              detallesDiv.html('<p><b>Error al cargar los detalles.</b></p>');
+              console.error('Error al obtener los detalles', xhr.responseText);
+            }
+          });
+        }
+      });
+
+      //  botón "Editar"
+      $('.editar').on('click', function (event) {
+        event.stopPropagation(); // Evita que se dispare el evento de clic en la fila
+        const filaDetalles = $(this).closest('.detalles-fila');
+        const isbn = filaDetalles.prev('.fila-catalogo').data('isbn');
+        const categoria = filaDetalles.prev('.fila-catalogo').data('cat');
+
+        alert(`Editar item: ISBN: ${isbn}, Categoría: ${categoria}`);
+      });
+    },
+    error: function (xhr) {
+      alert('Error al cargar el catálogo');
+      console.error(xhr.responseText);
+    },
+  });
+}
+
+
 
   // Botón eliminar
   $(document).on('click', '.eliminar', function () {
@@ -104,6 +190,7 @@ $(document).ready(function () {
     const jsonDatos = JSON.stringify(datos);
 
     alert(jsonDatos);
+    
     //hacer confirmación
 
     $.ajax({
@@ -123,7 +210,6 @@ $(document).ready(function () {
     });
   });
 
-  //Inicialización de la tabla 
+  //Inicialización de la tabla
   cargarTabla();
-
 });
