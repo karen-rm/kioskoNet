@@ -11,6 +11,13 @@ header {
   height: 100px;
 }
 
+.btnSalir{
+  margin-top: 20px;
+  text-align: right; 
+  align-items: right;
+  text-align: right;
+}
+
 nav {
   background-color: #ad3c14;
   color: white;
@@ -18,7 +25,10 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  
 }
+
 
 .titulo-principal{
   color: white;

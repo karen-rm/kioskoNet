@@ -5,6 +5,7 @@ $(document).ready(function () {
   const modal = document.getElementById('Modal');
   const openModalBtn = document.getElementById('openModalBtn');
   const closeModalBtn = document.getElementById('closeModalBtn');
+  const btnSalir = document.getElementById('btnLogout');
 
   links.forEach((link) => {
     link.addEventListener('click', function () {
@@ -32,6 +33,11 @@ $(document).ready(function () {
       modal.style.display = 'none';
     }
   };
+
+  //Botón cerrar sesión 
+  btnSalir.addEventListener("click", () =>{
+    window.location.href = "../pages/login.html";
+  });
 
   
 
