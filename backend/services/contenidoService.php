@@ -18,6 +18,27 @@ class ContenidoService
         return $this->modelo->obtenerCatalogo();
     }
 
+    public function obtenerDetalles($isbn)
+    {
+
+        $detalles = $this->modelo->obtenerDetallesPorIsbn($isbn);
+
+
+        if (!$detalles) {
+            return [
+                'status' => 404,
+                'message' => 'Detalles no encontrados para el ISBN proporcionado.'
+            ];
+        }
+
+        return [
+            'status' => 200,
+            'message' => 'Detalles recuperados con éxito.',
+            'detalles' => $detalles
+        ];
+    }
+
+
     public function guardarTitulo($isbn, $titulo, $autor, $editorial, $anio, $genero, $precio, $categoria, $revista)
     {
         // Verificar duplicado
@@ -85,7 +106,7 @@ class ContenidoService
         }
 
         $resCatalogo = $this->modelo->agregarTitulo($isbn, $categoria, $titulo);
-        
+
         // Preparar detalles
         $detalles = [
             'Editorial' => $editorial,
@@ -152,7 +173,6 @@ class ContenidoService
                 'message' => "Error al eliminar los datos en Firebase."
             ];
         }
-
 
         return [
             'status' => 200,

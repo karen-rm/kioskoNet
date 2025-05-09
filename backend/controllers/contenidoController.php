@@ -18,6 +18,24 @@ class ContenidoController
     return $this->servicio->obtenerCatalogo();
   }
 
+  public function obtenerDetalles($datos)
+  {
+
+    $isbn = $datos['isbn'] ?? null;
+
+
+    if (empty($isbn)) {
+      return [
+        'status' => 400,
+        'message' => 'El ISBN es necesario para recuperar los detalles.'
+      ];
+    }
+
+
+    return $this->servicio->obtenerDetalles($isbn);
+  }
+
+
   public function agregarTitulo($datos)
   {
     $validacion = $this->verificarCampos($datos);
@@ -58,7 +76,6 @@ class ContenidoController
       $datos['categoria'],
       $datos['revista'] ?? null
     );
-
   }
 
   public function verificarCampos($datos)

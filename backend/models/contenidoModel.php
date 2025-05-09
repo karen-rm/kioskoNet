@@ -17,18 +17,14 @@ class ContenidoModel
   // Función para verificar si el ISBN ya existe
   public function verificarTituloExistente($isbn, $categoria)
   {
-    // Hacemos la solicitud GET
     $response = $this->firebase->request('Catalogo/' . $categoria, $isbn, 'GET');
+   
+    $decoded = json_decode($response, true); 
 
-    // Intentamos decodificar
-    $decoded = json_decode($response, true); // ← usamos true para array asociativo
-
-    // Si hay un error o el documento no existe (devuelve null)
     if (isset($decoded['error']) || is_null($decoded)) {
       return false; // No existe
     }
 
-    // Si está vacío como array vacío o string vacío
     if (is_array($decoded) && count($decoded) === 0) {
       return false; // No existe
     }
@@ -37,16 +33,11 @@ class ContenidoModel
   }
 
 
-
-
-  // Agregar un título a Firebase
   public function agregarTitulo($isbn, $categoria, $titulo)
   {
     // El título se manda como string, no como array u objeto
     return $this->firebase->request('Catalogo/' . $categoria . '/' . $isbn, '', 'PUT', $titulo);
   }
-
-
 
 
   public function agregarDetalles($isbn, $data)
@@ -74,36 +65,33 @@ class ContenidoModel
     return $decoded;
   }
 
+
   public function obtenerDetallesPorIsbn($isbn)
-{
-    // Hacemos la solicitud GET a la colección 'Detalles' usando el ISBN
+  {
+
     $response = $this->firebase->request('Detalles/', $isbn, 'GET');
 
-    // Intentamos decodificar la respuesta
+    if (empty($response) || $response === 'null') {
+      return null;
+    }
+
     $decoded = json_decode($response, true);
 
-    // Verificamos si la respuesta es válida
     if (json_last_error() !== JSON_ERROR_NONE) {
-        error_log("Error al decodificar la respuesta de Firebase: " . json_last_error_msg());
-        return null; // Devolver null en caso de error
+      return null;
     }
 
-    // Si la respuesta está vacía o no contiene los datos
-    if (empty($decoded)) {
-        return null; // No se encontraron detalles
-    }
-
-    // Retornamos los detalles decodificados
     return $decoded;
-}
+  }
 
 
-  public function eliminarTitulo($isbn, $categoria){
+  public function eliminarTitulo($isbn, $categoria)
+  {
     return $this->firebase->request("Catalogo/{$categoria}", $isbn, 'DELETE');
   }
 
-  public function eliminarDetalles($isbn){
+  public function eliminarDetalles($isbn)
+  {
     return $this->firebase->request('Detalles/', $isbn, 'DELETE', null);
   }
-
 }
