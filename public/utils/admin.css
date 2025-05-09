@@ -1,0 +1,183 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial;
+}
+
+header {
+  background-image: url('https://images4.alphacoders.com/132/1326368.png');
+  background-size: cover;
+  background-position: center;
+  height: 100px;
+}
+
+nav {
+  background-color: #ad3c14;
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.titulo-principal{
+  color: white;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+  margin-left: 30px;
+}
+
+nav a.active {
+  border-bottom: 2px solid #ffbb00; 
+}
+
+.contenedor-principal {
+  text-align: right; 
+}
+
+.btn-agregar{
+  margin: 10px;
+  background-color: #ffbb00; 
+  color: white; 
+  border: none; 
+  padding: 10px 20px; 
+  font-size: 16px; 
+  cursor: pointer; 
+  
+}
+
+
+/* Estilos del modal */
+.modal {
+  display: none; /* Inicialmente oculto */
+  position: fixed; /* Fijo en la pantalla */
+  z-index: 1; /* Asegura que el modal esté encima del contenido */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro transparente */
+  overflow: auto;
+}
+
+.modal-content {
+  background-color: white;
+  margin: 5% auto;
+  padding: 20px;
+  border-radius: 5px;
+  width: 80%; /* Ajusta el ancho */
+  max-width: 500px; /* Máximo ancho */
+ 
+}
+
+.close-btn {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Centrar los elementos dentro del contenedor */
+.contenedor-catalogo {
+  display: block; /* Esto asegura que los elementos se apilen verticalmente */
+  text-align: center; /* Opcional: centra los elementos dentro del contenedor (si deseas) */
+  margin-top: 20px; /* Para separar un poco el contenido superior */
+}
+
+#tabla-catalogo {
+  border-collapse: collapse; /* Esto elimina el espacio entre los bordes de las celdas */
+  width: 80%; /* Puedes ajustar el ancho según tus necesidades */
+  max-width: 800px; /* Máximo ancho de la tabla */
+  margin: 20px auto; /* Centra la tabla y le da un margen vertical */
+}
+
+#tabla-catalogo th, #tabla-catalogo td {
+  padding: 10px;
+  text-align: left; /* Alineación del contenido de las celdas */
+}
+
+#tabla-catalogo th {
+  background-color: #db9a82; /* Color de fondo de las cabeceras */
+  color: white; /* Color del texto en las cabeceras */
+}
+
+
+p{
+  text-align: left; /* Alinea el texto a la izquierda */
+  font-size: 24px; /* Tamaño de letra grande */
+  margin-left: 250px;
+}
+
+/*Estilos formulario agregar título*/
+
+
+/* Título del formulario */
+h1 {
+  text-align: center;
+  font-size: 28px;
+  color: #333; 
+  margin-bottom: 30px; 
+  font-weight: 600;
+}
+
+/* Estilo para las etiquetas */
+label {
+  font-size: 15px;
+  text-align: left;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* Estilos para las filas del formulario */
+/* Estilos para las filas del formulario */
+
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Dos columnas por defecto */
+  gap: 20px; /* Espacio entre las columnas */
+  margin-bottom: 20px; /* Espacio entre filas */
+}
+
+/* Fila para un solo campo que ocupe toda la fila */
+.form-row.full-width {
+  grid-template-columns: 1fr; /* Una sola columna para todo el largo */
+}
+
+
+/* Estilos para los inputs y el select */
+input[type="text"], input[type="number"], select {
+  width: 100%;
+  margin-bottom: 3px; /* Espacio entre los campos */
+  border: 1px solid #ddd; /* Borde suave */
+  background-color: #fff; /* Fondo blanco */
+  font-size: 16px; /* Tamaño de texto */
+  transition: border 0.3s ease; /* Transición suave para el borde */
+}
+
+
+
+
+/* Estilo del botón de envío */
+input[type="submit"] {
+  background-color:  #44be73; /* Color de fondo del botón */
+  color: white; /* Color del texto del botón */
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Transición para el color de fondo */
+ 
+}
+

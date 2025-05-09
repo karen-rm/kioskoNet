@@ -1,65 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Administrador</title>
+  <link rel="stylesheet" href="../utils/admin.css">
+</head>
+<body>
+
+  <header></header>
+
+  <nav>
+    <div class="menu">
+      <a href="#">Catálogo</a>
+      <a href="#">Usuarios</a>
+      <a href="#">Notifificaciones</a>
+    </div>
+    <h1 class="titulo-principal">KISOKONET</h1>
+  </nav>
+
+  <!-- contenedor principal que contiene todos los elementos -->
+  <div class="contenedor-principal">
+
+    <!-- botón para agregar un nuevo título -->
+    <button id="openModalBtn" class="btn-agregar">Agregar título</button>
+
+    <!-- Modal -->
+    <div id="Modal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" id="closeModalBtn">&times;</span>
+        <!-- formulario: nuevo título  + detalles -->
+        <h1>Agregar un título</h1>
+        <form id="agregarTituloForm">
+          <!-- Fila con un solo campo -->
+          <div class="form-row full-width">
+            <div class="form-group">
+              <label for="categoria"><b>Categoría:</b></label>
+              <select id="categoria" name="categoria" required>
+                <option value="">Seleccione una categoría</option>
+                <option value="Libro">Libro</option>
+                <option value="Revista">Revista</option>
+                <option value="Comic">Cómic</option>
+                <option value="Manga">Manga</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Segunda fila con dos columnas -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="isbn"><b>ISBN:</b></label>
+              <input type="text" id="isbn" name="isbn" required>
+            </div>
+
+            <div class="form-group">
+              <label for="titulo"><b>Título:</b></label>
+              <input type="text" id="titulo" name="titulo" required>
+            </div>
+          </div>
+
+          <!-- Tercera fila con solo 1 campo: Autor -->
+          <div class="form-row full-width">
+            <div class="form-group">
+              <label for="autor"><b>Autor:</b></label>
+              <input type="text" id="autor" name="autor">
+            </div>
+          </div>
+
+          <!-- Cuarta fila con solo 1 campo: Revista-->
+          <div class="form-row full-width">
+            <div class="form-group">
+              <label for="revista"><b>Revista:</b></label>
+              <input type="text" id="revista" name="revista">
+            </div>
+
+          </div>
+
+
+          <!-- Quinta fila con dos columnas -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="editorial"><b>Editorial:</b></label>
+              <input type="text" id="editorial" name="editorial" required>
+            </div>
+            <div class="form-group">
+              <label for="anio"><b>Año de publicación:</b></label>
+              <input type="text" id="anio" name="anio" required>
+            </div>
+          </div>
+
+          <!-- Sexta fila con dos columnas -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="genero"><b>Género:</b></label>
+              <input type="text" id="genero" name="genero" required>
+            </div>
+            <div class="form-group">
+              <label for="precio"><b>Precio:</b></label>
+              <input type="number" id="precio" name="precio" required>
+            </div>
+          </div>
+          <!--Botón enviar  -->
+          <input type="submit" value="Enviar">
+        </form>
+        <!-- fin formulario: nuevo título  + detalles -->
+      </div>
+    </div>
+    <!-- fin modal -->
+
+    <!-- tabla catálogo-->
+    <div class="contenedor-catalogo">
+      <p>CATÁLOGO</p>
+      <table border="1" id="tabla-catalogo">
+        <thead>
+          <tr>
+            <th>ISBN</th>
+            <th>Título</th>
+            <th>Categoría</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+  </div> <!-- fin contenedor principal -->
+
+
   <!-- Cargar jQuery -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
 
-<body>
-  <h1>Agregar un titulo</h1>
-  <form id="agregarTituloForm">
-
-    <label for="isbn">ISBN:</label><br>
-    <input type="text" id="isbn" name="isbn" required><br><br>
-
-    <label for="titulo">Titulo:</label><br>
-    <input type="text" id="titulo" name="titulo" required><br><br>
-
-    <label for="categoria">Categoria:</label><br>
-    <input type="text" id="categoria" name="categoria" required><br><br>
-
-    <label for="autor">Autor:</label><br>
-    <input type="text" id="autor" name="autor"><br><br>
-
-    <label for="editorial">Editorial:</label><br>
-    <input type="text" id="editorial" name="editorial" required><br><br>
-
-    <label for="revista">Revista:</label><br>
-    <input type="text" id="revista" name="revista"><br><br>
-
-    <label for="anio">Año de publicación:</label><br>
-    <input type="text" id="anio" name="anio" required><br><br>
-
-    <label for="genero">Genero</label><br>
-    <input type="text" id="genero" name="genero" required><br><br>
-
-    <label for="precio">Precio</label><br>
-    <input type="text" id="precio" name="precio" required><br><br>
-
-    <input type="submit" value="Enviar">
-  </form>
-
-  <h2>Catálogo</h2>
-  <table border="1" id="tabla-catalogo">
-    <thead>
-      <tr>
-        <th>ISBN</th>
-        <th>Título</th>
-        <th>Categoría</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-
-
-  <!-- Incluir archivo JavaScript con AJAX -->
+  <!-- Archivo JavaScript principal -->
   <script src="../ajax/contenido.js"></script>
-</body>
 
+</body>
 </html>
