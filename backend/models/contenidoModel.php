@@ -74,6 +74,30 @@ class ContenidoModel
     return $decoded;
   }
 
+  public function obtenerDetallesPorIsbn($isbn)
+{
+    // Hacemos la solicitud GET a la colección 'Detalles' usando el ISBN
+    $response = $this->firebase->request('Detalles/', $isbn, 'GET');
+
+    // Intentamos decodificar la respuesta
+    $decoded = json_decode($response, true);
+
+    // Verificamos si la respuesta es válida
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        error_log("Error al decodificar la respuesta de Firebase: " . json_last_error_msg());
+        return null; // Devolver null en caso de error
+    }
+
+    // Si la respuesta está vacía o no contiene los datos
+    if (empty($decoded)) {
+        return null; // No se encontraron detalles
+    }
+
+    // Retornamos los detalles decodificados
+    return $decoded;
+}
+
+
   public function eliminarTitulo($isbn, $categoria){
     return $this->firebase->request("Catalogo/{$categoria}", $isbn, 'DELETE');
   }
