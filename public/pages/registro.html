@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Registro de Cliente</title>
+  <link rel="stylesheet" href="../utils/registro.css">
+</head>
+<body>
+  <div class="registro-container">
+    <h2>Registro de Cliente</h2>
+    <input type="text" id="username" placeholder="Usuario" />
+    <input type="password" id="password" placeholder="Contraseña" />
+    <input type="email" id="correo" placeholder="Correo electrónico" />
+    <input type="text" id="nombre" placeholder="Nombre completo" />
+    <input type="tel" id="telefono" placeholder="Teléfono" />
+    <button id="registrarBtn">Registrarse</button>
+    <p id="mensaje-registro"></p>
+    <a href="login.html" class="back-arrow">Regresar</a>
+  </div>
+
+  <script src="../services/registroService.js"></script>
+  <script src="../ajax/registro.js"></script>
+</body>
+</html>
