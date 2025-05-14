@@ -18,29 +18,46 @@ class ContenidoService
         return $this->modelo->obtenerCatalogo();
     }
 
-    public function obtenerDetalles($isbn)
-    {
+    public function obtenerDetalles($datos)
+{
+    $isbn = $datos['isbn'];
 
-        $detalles = $this->modelo->obtenerDetallesPorIsbn($isbn);
-
-
-        if (!$detalles) {
-            return [
-                'status' => 404,
-                'message' => 'Detalles no encontrados para el ISBN proporcionado.'
-            ];
-        }
-
+    // Verificar si el ISBN está presente
+    if (empty($isbn)) {
         return [
-            'status' => 200,
-            'message' => 'Detalles recuperados con éxito.',
-            'detalles' => $detalles
+            'status' => 400,
+            'message' => 'El ISBN es necesario para recuperar los detalles.'
         ];
     }
 
+    // Llamar al modelo para obtener detalles desde Firebase
+    $detalles = $this->modelo->obtenerDetalles($isbn);
 
-    public function guardarTitulo($isbn, $titulo, $autor, $editorial, $anio, $genero, $precio, $categoria, $revista)
+    // Verificar si se encontraron detalles
+    if (!$detalles) {
+        return [
+            'status' => 404,
+            'message' => 'Detalles no encontrados para el ISBN proporcionado.'
+        ];
+    }
+
+    // Si todo está bien, devolver la respuesta con los detalles
+    return [
+        'status' => 200,
+        'message' => 'Detalles recuperados con éxito.',
+        'detalles' => $detalles // Esto incluirá el contenido que has recuperado de Firebase
+    ];
+}
+
+
+
+
+    public function guardarTitulo($datosTitulo)
     {
+        $isbn = $datosTitulo['isbn'];
+        $titulo = $datosTitulo['titulo'];
+        $categoria = $datosTitulo['categoria'];
+
         // Verificar duplicado
         if ($this->modelo->verificarTituloExistente($isbn, $categoria)) {
             return [
@@ -54,17 +71,18 @@ class ContenidoService
 
         // Preparar detalles
         $detalles = [
-            'Editorial' => $editorial,
-            'Año publicacion' => $anio,
-            'Genero' => $genero,
-            'Precio' => $precio,
+            'Editorial' => $datosTitulo['editorial'],
+            'Año publicacion' => $datosTitulo['anio'],
+            'Genero' => $datosTitulo['genero'],
+            'Precio' => $datosTitulo['precio'],
             'Titulo' => $titulo,
+            'Imagen' => $datosTitulo['img'],
         ];
 
         if ($categoria === 'Revista') {
-            $detalles['Revista'] = $revista;
+            $detalles['Revista'] = $datosTitulo['revista'];;
         } else {
-            $detalles['Autor'] = $autor;
+            $detalles['Autor'] = $datosTitulo['autor'];;
         }
 
         // Guardar detalles

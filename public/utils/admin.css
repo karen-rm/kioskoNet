@@ -11,9 +11,9 @@ header {
   height: 100px;
 }
 
-.btnSalir{
+.btnSalir {
   margin-top: 20px;
-  text-align: right; 
+  text-align: right;
   align-items: right;
   text-align: right;
 }
@@ -25,12 +25,9 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  
 }
 
-
-.titulo-principal{
+.titulo-principal {
   color: white;
 }
 
@@ -41,24 +38,22 @@ a {
 }
 
 nav a.active {
-  border-bottom: 2px solid #ffbb00; 
+  border-bottom: 2px solid #ffbb00;
 }
 
 .contenedor-principal {
-  text-align: right; 
+  text-align: right;
 }
 
-.btn-agregar{
+.btn-agregar {
   margin: 10px;
-  background-color: #ffbb00; 
-  color: white; 
-  border: none; 
-  padding: 10px 20px; 
-  font-size: 16px; 
-  cursor: pointer; 
-  
+  background-color: #ffbb00;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
 }
-
 
 /* Estilos del modal */
 .modal {
@@ -80,7 +75,6 @@ nav a.active {
   border-radius: 5px;
   width: 80%; /* Ajusta el ancho */
   max-width: 500px; /* Máximo ancho */
- 
 }
 
 .close-btn {
@@ -112,7 +106,8 @@ nav a.active {
   margin: 20px auto; /* Centra la tabla y le da un margen vertical */
 }
 
-#tabla-catalogo th, #tabla-catalogo td {
+#tabla-catalogo th,
+#tabla-catalogo td {
   padding: 10px;
   text-align: left; /* Alineación del contenido de las celdas */
 }
@@ -122,8 +117,7 @@ nav a.active {
   color: white; /* Color del texto en las cabeceras */
 }
 
-
-p{
+p {
   text-align: left; /* Alinea el texto a la izquierda */
   font-size: 24px; /* Tamaño de letra grande */
   margin-left: 250px;
@@ -131,13 +125,12 @@ p{
 
 /*Estilos formulario agregar título*/
 
-
 /* Título del formulario */
 h1 {
   text-align: center;
   font-size: 28px;
-  color: #333; 
-  margin-bottom: 30px; 
+  color: #333;
+  margin-bottom: 30px;
   font-weight: 600;
 }
 
@@ -152,7 +145,6 @@ label {
 /* Estilos para las filas del formulario */
 /* Estilos para las filas del formulario */
 
-
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr; /* Dos columnas por defecto */
@@ -165,9 +157,10 @@ label {
   grid-template-columns: 1fr; /* Una sola columna para todo el largo */
 }
 
-
 /* Estilos para los inputs y el select */
-input[type="text"], input[type="number"], select {
+input[type='text'],
+input[type='number'],
+select {
   width: 100%;
   margin-bottom: 3px; /* Espacio entre los campos */
   border: 1px solid #ddd; /* Borde suave */
@@ -176,23 +169,23 @@ input[type="text"], input[type="number"], select {
   transition: border 0.3s ease; /* Transición suave para el borde */
 }
 
-
-
-
 /* Estilo del botón de envío */
-input[type="submit"] {
-  background-color:  #44be73; /* Color de fondo del botón */
+input[type='submit'] {
+  background-color: #44be73; /* Color de fondo del botón */
   color: white; /* Color del texto del botón */
   border: none;
   padding: 10px;
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s ease; /* Transición para el color de fondo */
- 
 }
 
 .detalles-fila td {
   padding-left: 20px;
   font-size: 14px;
   color: #333;
+}
+
+.elemento-izquierda {
+  float: left;
 }
