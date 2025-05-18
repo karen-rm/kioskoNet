@@ -70,23 +70,24 @@ class ContenidoModel
 
 public function obtenerDetalles($isbn)
 {
-    // Hacer la solicitud a Firebase para obtener detalles del ISBN
+    $isbn = trim($isbn); // 🔧 importante para evitar espacios, saltos de línea
+
+    if (empty($isbn)) {
+        return null; // no continuar si está vacío
+    }
+
     $response = $this->firebase->request('Detalles/', $isbn, 'GET');
 
-    // Verificar si la respuesta está vacía o es nula
-    if (empty($response) || $response === 'null') {
-        return null; // No hay detalles
+    if ($response === false || $response === 'null' || empty($response)) {
+        return null;
     }
 
-    // Decodificar la respuesta de Firebase (se espera que sea un JSON)
     $decoded = json_decode($response, true);
-
-    // Verificar si hubo un error al decodificar el JSON
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        return null; // Error en la decodificación
+    if (json_last_error() !== JSON_ERROR_NONE || !is_array($decoded)) {
+        return null;
     }
 
-    return $decoded; // Retornar los detalles decodificados
+    return $decoded;
 }
 
 

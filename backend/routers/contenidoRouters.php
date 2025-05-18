@@ -96,10 +96,10 @@ $app->post('/titulo', function (Request $request, Response $response) {
 });
 
 $app->put('/titulo', function (Request $request, Response $response){
-    $datos = $request->getParsedBody();
+    $datosNuevosTitulo = json_decode($request->getBody(), true);
 
     $controller = new ContenidoController();
-    $resultado = $controller->editarTitulo($datos);
+    $resultado = $controller->editarTitulo($datosNuevosTitulo);
 
     $status = $resultado['status'] ?? 500;
     $json = json_encode([
@@ -134,34 +134,25 @@ $app->delete('/titulo', function (Request $request, Response $response) {
 });
 
 $app->get('/detalles', function (Request $request, Response $response) {
-    
-    // Decodificar el cuerpo de la solicitud JSON para obtener los datos
-    $datos = json_decode($request->getBody()->getContents(), true);
+    $isbn = $request->getQueryParams()['isbn'] ?? null;
 
-    // Crear el controlador
+    if (!$isbn) {
+        $response->getBody()->write(json_encode([
+            'status' => 400,
+            'message' => 'El ISBN es necesario.',
+            'detalles' => null
+        ]));
+        return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+    }
+
     $controller = new ContenidoController();
+    $resultado = $controller->obtenerDetalles(['isbn' => $isbn]);
 
-    // Llamar al método para obtener los detalles
-    $resultado = $controller->obtenerDetalles($datos);
-
-    // Definir el estado de la respuesta
-    $status = $resultado['status'] ?? 500;
-
-    // Preparar la respuesta JSON, asegurándose de incluir los detalles si existen
-    $json = json_encode([
-        'status' => $status,
-        'message' => $resultado['message'] ?? 'Error desconocido',
-        'detalles' => $resultado['detalles'] ?? null // Asegúrate de incluir los detalles en la respuesta
-    ]);
-
-    // Escribir la respuesta en el cuerpo de la respuesta HTTP
-    $response->getBody()->write($json);
-
-    // Devolver la respuesta con el estado y los encabezados adecuados
-    return $response
-        ->withStatus($status)
-        ->withHeader('Content-Type', 'application/json');
+    $response->getBody()->write(json_encode($resultado));
+    return $response->withStatus($resultado['status'])->withHeader('Content-Type', 'application/json');
 });
+
+
 
 
 

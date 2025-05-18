@@ -22,38 +22,32 @@ class ContenidoService
 
     public function obtenerDetalles($datos)
     {
-        $datos = json_decode(file_get_contents('php://input'), true);
-
-        if (!isset($datos['isbn'])) {
-            http_response_code(400);
-            echo json_encode([
+        if (!isset($datos['isbn']) || empty($datos['isbn'])) {
+            return [
                 'status' => 400,
                 'message' => 'El ISBN es necesario para recuperar los detalles.',
                 'detalles' => null
-            ]);
-            exit;
-        }
-
-        $isbn = $datos['isbn'];
-
-        // Llamar al modelo para obtener detalles desde Firebase
-        $detalles = $this->modelo->obtenerDetalles($isbn);
-
-        // Verificar si se encontraron detalles
-        if (!$detalles) {
-            return [
-                'status' => 404,
-                'message' => 'Detalles no encontrados para el ISBN proporcionado.'
             ];
         }
 
-        // Si todo está bien, devolver la respuesta con los detalles
+        $isbn = $datos['isbn'];
+        $detalles = $this->modelo->obtenerDetalles($isbn);
+
+        if (is_null($detalles)) {
+            return [
+                'status' => 404,
+                'message' => 'Detalles no encontrados para el ISBN proporcionado.',
+                'detalles' => null
+            ];
+        }
+
         return [
             'status' => 200,
             'message' => 'Detalles recuperados con éxito.',
-            'detalles' => $detalles // Esto incluirá el contenido que has recuperado de Firebase
+            'detalles' => $detalles
         ];
     }
+
 
 
 
@@ -122,60 +116,71 @@ class ContenidoService
         ];
     }
 
-    public function editarTitulo($isbn, $titulo, $autor, $editorial, $anio, $genero, $precio, $categoria, $revista)
-    {
+    public function editarTitulo($datosTitulo)
+{
+    $isbn = $datosTitulo['isbn'];
+    $titulo = $datosTitulo['titulo'];
+    $categoria = $datosTitulo['categoria'];
 
-        if (!$this->modelo->verificarTituloExistente($isbn, $categoria)) {
-            return ['status' => 404, 'message' => "El título no existe y no se puede editar."];
-        }
-
-        $resCatalogo = $this->modelo->agregarTitulo($isbn, $categoria, $titulo);
-
-        // Preparar detalles
-        $detalles = [
-            'Editorial' => $editorial,
-            'Año publicacion' => $anio,
-            'Genero' => $genero,
-            'Precio' => $precio,
-            'Titulo' => $titulo,
-        ];
-
-        if ($categoria === 'Revista') {
-            $detalles['Revista'] = $revista;
-        } else {
-            $detalles['Autor'] = $autor;
-        }
-
-        // Guardar detalles
-        $resDetalles = $this->modelo->agregarDetalles($isbn, $detalles);
-
-        // Verificar errores de Firebase
-        $catalogoError = strpos($resCatalogo, 'error') !== false;
-        $detallesError = strpos($resDetalles, 'error') !== false;
-
-        if ($catalogoError || $detallesError) {
-            return [
-                'status' => 500,
-                'message' => "Error al editar en Firebase.",
-                'data' => [
-                    'catalogo' => $resCatalogo,
-                    'detalles' => $resDetalles
-                ]
-            ];
-        }
-
-        // Todo bien
+    // Verificar existencia
+    if (!$this->modelo->verificarTituloExistente($isbn, $categoria)) {
         return [
-            'status' => 201,
-            'message' => "Título agregado correctamente.",
+            'status' => 404,
+            'message' => "El título con ISBN {$isbn} no existe en la categoría '{$categoria}' y no se puede editar."
+        ];
+    }
+
+    // Actualizar en catálogo
+    $resCatalogo = $this->modelo->agregarTitulo($isbn, $categoria, $titulo);
+
+    // Preparar detalles
+    $detalles = [
+        'Editorial' => $datosTitulo['editorial'],
+        'Año publicacion' => $datosTitulo['anio'],
+        'Genero' => $datosTitulo['genero'],
+        'Precio' => $datosTitulo['precio'],
+        'Titulo' => $titulo,
+        'Imagen' => $datosTitulo['img'],
+    ];
+
+    if ($categoria === 'Revista') {
+        $detalles['Revista'] = $datosTitulo['revista'];
+    } else {
+        $detalles['Autor'] = $datosTitulo['autor'];
+    }
+
+    // Guardar detalles actualizados
+    $resDetalles = $this->modelo->agregarDetalles($isbn, $detalles);
+
+    // Verificar errores de Firebase
+    $catalogoError = strpos($resCatalogo, 'error') !== false;
+    $detallesError = strpos($resDetalles, 'error') !== false;
+
+    if ($catalogoError || $detallesError) {
+        return [
+            'status' => 500,
+            'message' => "Error al editar en Firebase.",
             'data' => [
-                'isbn' => $isbn,
-                'categoria' => $categoria,
                 'catalogo' => $resCatalogo,
                 'detalles' => $resDetalles
             ]
         ];
     }
+
+    // Todo bien
+    return [
+        'status' => 200,
+        'message' => "Título editado correctamente.",
+        'data' => [
+            'isbn' => $isbn,
+            'categoria' => $categoria,
+            'catalogo' => $resCatalogo,
+            'detalles' => $resDetalles
+        ]
+    ];
+}
+
+
 
     public function eliminarTitulo($isbn, $categoria)
     {

@@ -8,6 +8,8 @@ $(document).ready(function () {
   const categoriaSelect = document.getElementById('categoria');
   const autorField = document.getElementById('autor');
   const revistaField = document.getElementById('revista');
+  let modoEdicion = false;
+
 
   links.forEach((link) => {
     link.addEventListener('click', function () {
@@ -22,19 +24,50 @@ $(document).ready(function () {
   //Control del modal
 
   openModalBtn.onclick = function () {
+    modoEdicion = false;
     modal.style.display = 'block';
+    $('#agregarTituloForm input[type="submit"]').val('Agregar título');
+
+
+    // Limpiar formulario y habilitar campos
+  $('#agregarTituloForm')[0].reset();
+  $('#isbn').prop('readonly', false);
+  $('#categoria').prop('disabled', false);
+  $('#img').prop('required', true);
   };
 
   closeModalBtn.onclick = function () {
-    modal.style.display = 'none';
-  };
+  modal.style.display = 'none';
+
+  // Resetear formulario y estado
+  $('#agregarTituloForm')[0].reset();
+  $('#isbn').prop('readonly', false);
+  $('#categoria').prop('disabled', false);
+  $('#img').prop('required', true);
+  modoEdicion = false;
+
+  // Restaurar el texto del botón
+  $('#agregarTituloForm input[type="submit"]').val('Agregar título');
+};
+
 
   // Cuando el usuario hace clic fuera del modal, también lo cierra
   window.onclick = function (event) {
-    if (event.target == modal) {
-      modal.style.display = 'none';
-    }
-  };
+  if (event.target == modal) {
+    modal.style.display = 'none';
+
+    // Resetear también si se cierra haciendo clic fuera
+    $('#agregarTituloForm')[0].reset();
+    $('#isbn').prop('readonly', false);
+    $('#categoria').prop('disabled', false);
+    $('#img').prop('required', true);
+    modoEdicion = false;
+
+    // Restaurar el texto del botón
+    $('#agregarTituloForm input[type="submit"]').val('Agregar título');
+  }
+};
+
 
   //Botón cerrar sesión
   btnSalir.addEventListener('click', () => {
@@ -57,52 +90,57 @@ $(document).ready(function () {
   categoriaSelect.dispatchEvent(new Event('change'));
 
   $('#agregarTituloForm').submit(function (e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    const formData = new FormData(this);
+  const formData = new FormData(this);
 
-    $.ajax({
-      url: 'http://localhost:8080/ServiciosWeb/ProyectoFinal/kioskoNet/public/imagen',
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (respuesta) {
-        console.log('Imagen obtenida y reubicada con exito.');
+  $.ajax({
+    url: 'http://localhost:8080/ServiciosWeb/ProyectoFinal/kioskoNet/public/imagen',
+    type: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (respuesta) {
+      console.log('Imagen procesada');
 
-        const datosTitulo = {
-          isbn: $('#isbn').val(),
-          titulo: $('#titulo').val(),
-          categoria: $('#categoria').val(),
-          autor: $('#autor').val(),
-          revista: $('revista').val(),
-          editorial: $('editorial').val(),
-          anio: $('anio').val(),
-          genero: $('genero').val(),
-          precio: $('precio').val(),
-          img: respuesta.imagenUrl,
-        };
+      const datosTitulo = {
+        isbn: $('#isbn').val(),
+        titulo: $('#titulo').val(),
+        categoria: $('#categoria').val(),
+        autor: $('#autor').val(),
+        revista: $('#revista').val(),
+        editorial: $('#editorial').val(),
+        anio: $('#anio').val(),
+        genero: $('#genero').val(),
+        precio: $('#precio').val(),
+        img: respuesta.imagenUrl
+      };
 
-        $.ajax({
-          url: 'http://localhost:8080/ServiciosWeb/ProyectoFinal/kioskoNet/public/titulo',
-          type: 'POST',
-          data: JSON.stringify(datosTitulo),
-          success: function (respuesta) {
-            alert('Título agregado correctamente');
-            console.log(respuesta);
-          },
-          error: function (xhr, status, error) {
-            alert('Error al agregar título');
-            console.error(xhr.responseText);
-          },
-        });
-      },
-      error: function (xhr, status, error) {
-        alert('Error al obtener la imagen.');
-        console.error(xhr.responseText);
-      },
-    });
+      const metodo = modoEdicion ? 'PUT' : 'POST';
+
+      $.ajax({
+        url: 'http://localhost:8080/ServiciosWeb/ProyectoFinal/kioskoNet/public/titulo',
+        type: metodo,
+        contentType: 'application/json',
+        data: JSON.stringify(datosTitulo),
+        success: function (respuesta) {
+          alert(modoEdicion ? 'Título editado correctamente' : 'Título agregado correctamente');
+          modal.style.display = 'none';
+          cargarTabla();
+        },
+        error: function (xhr) {
+          alert('Error al guardar el título');
+          console.error(xhr.responseText);
+        }
+      });
+    },
+    error: function (xhr) {
+      alert('Error al subir imagen');
+      console.error(xhr.responseText);
+    }
   });
+});
+
 
   function cargarTabla() {
     $.ajax({
@@ -163,10 +201,8 @@ $(document).ready(function () {
           console.log(isbn);
           if (detallesDiv.text() === 'Cargando detalles...') {
             $.ajax({
-              url: 'http://localhost:8080/ServiciosWeb/ProyectoFinal/kioskoNet/public/recuperar-detalles',
-              type: 'POST',
-              data: JSON.stringify({ isbn: isbn }),
-              contentType: 'application/json',
+              url: 'http://localhost:8080/ServiciosWeb/ProyectoFinal/kioskoNet/public/detalles?isbn=${isbn}',
+              type: 'GET',
               success: function (respuesta) {
                 console.log(respuesta);
                 if (respuesta.success && respuesta.detalles) {
@@ -193,6 +229,8 @@ $(document).ready(function () {
 
         //  botón "Editar"
         $('.editar').on('click', function (event) {
+          modoEdicion = true;
+
           event.stopPropagation(); // Evita que se dispare el evento de clic en la fila
           const filaDetalles = $(this).closest('.detalles-fila');
           const isbn = filaDetalles.prev('.fila-catalogo').data('isbn');
@@ -200,16 +238,44 @@ $(document).ready(function () {
 
           alert(`Editar item: ISBN: ${isbn}, Categoría: ${categoria}`);
           $.ajax({
-            url: 'http://localhost:8080/ServiciosWeb/ProyectoFinal/kioskoNet/public/detalles',
+           url: `http://localhost:8080/ServiciosWeb/ProyectoFinal/kioskoNet/public/detalles?isbn=${isbn}`,
             type: 'GET',
-            contentType: 'application/json',  // Asegúrate de enviar los datos como JSON
+            contentType: 'application/json', // Asegúrate de enviar los datos como JSON
             data: JSON.stringify({ isbn: isbn }),
             success: function (respuesta) {
               console.log(respuesta);
 
-              modal.style.display = 'block';
+              if (respuesta.detalles) {
+                const detalles = respuesta.detalles;
 
-              
+                // Mostrar el modal
+                modal.style.display = 'block';
+
+                $('#agregarTituloForm input[type="submit"]').val('Guardar cambios');
+
+
+                // Llenar campos del formulario
+                $('#isbn').val(isbn).prop('readonly', true); // desactivar edición de ISBN
+                $('#categoria').val(categoria).prop('disabled', true); // evitar cambiar categoría
+                $('#titulo').val(detalles.Titulo || '');
+                $('#editorial').val(detalles.Editorial || '');
+                 $('#anio').val(detalles['Año publicacion'] || '');
+                $('#genero').val(detalles.Genero || '');
+                $('#precio').val(detalles.Precio || '');
+                $('#img').prop('required', false); // no obligar imagen al editar
+
+                // Mostrar u ocultar autor/revista según categoría
+                $('#categoria').trigger('change');
+                if (categoria === 'Revista') {
+                  $('#revista').val(detalles.Revista || '');
+                  $('#autor').val('');
+                } else {
+                  $('#autor').val(detalles.Autor || '');
+                  $('#revista').val('');
+                }
+              } else {
+                alert('No se encontraron los detalles del título.');
+              }
             },
             error: function (xhr, status, error) {
               alert('Error al agregar título');

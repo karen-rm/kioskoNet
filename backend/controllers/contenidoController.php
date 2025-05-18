@@ -18,9 +18,9 @@ class ContenidoController
     return $this->servicio->obtenerCatalogo();
   }
 
-  public function obtenerDetalles($datos)
+  public function obtenerDetalles($isbn)
   {
-    return $this->servicio->obtenerDetalles($datos);
+    return $this->servicio->obtenerDetalles($isbn);
   }
 
 
@@ -36,25 +36,16 @@ class ContenidoController
     return $this->servicio->guardarTitulo($datosTitulo);
   }
 
-  public function editarTitulo($datos)
+  public function editarTitulo($datosNuevosTitulo)
   {
-    $validacion = $this->verificarCampos($datos);
+    $validacion = $this->verificarCampos($datosNuevosTitulo);
     if ($validacion !== null) {
       return $validacion;
     }
 
     // Llamar al servicio
-    return $this->servicio->editarTitulo(
-      $datos['isbn'],
-      $datos['titulo'],
-      $datos['autor'] ?? null,
-      $datos['editorial'],
-      $datos['anio'],
-      $datos['genero'],
-      $datos['precio'],
-      $datos['categoria'],
-      $datos['revista'] ?? null
-    );
+    return $this->servicio->editarTitulo($datosNuevosTitulo);
+
   }
 
   public function verificarCampos($datos)
