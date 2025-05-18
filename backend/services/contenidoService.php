@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\ContenidoModel;
 
+header("Content-Type: application/json");
+
 class ContenidoService
 {
     private $modelo;
@@ -19,35 +21,39 @@ class ContenidoService
     }
 
     public function obtenerDetalles($datos)
-{
-    $isbn = $datos['isbn'];
+    {
+        $datos = json_decode(file_get_contents('php://input'), true);
 
-    // Verificar si el ISBN está presente
-    if (empty($isbn)) {
+        if (!isset($datos['isbn'])) {
+            http_response_code(400);
+            echo json_encode([
+                'status' => 400,
+                'message' => 'El ISBN es necesario para recuperar los detalles.',
+                'detalles' => null
+            ]);
+            exit;
+        }
+
+        $isbn = $datos['isbn'];
+
+        // Llamar al modelo para obtener detalles desde Firebase
+        $detalles = $this->modelo->obtenerDetalles($isbn);
+
+        // Verificar si se encontraron detalles
+        if (!$detalles) {
+            return [
+                'status' => 404,
+                'message' => 'Detalles no encontrados para el ISBN proporcionado.'
+            ];
+        }
+
+        // Si todo está bien, devolver la respuesta con los detalles
         return [
-            'status' => 400,
-            'message' => 'El ISBN es necesario para recuperar los detalles.'
+            'status' => 200,
+            'message' => 'Detalles recuperados con éxito.',
+            'detalles' => $detalles // Esto incluirá el contenido que has recuperado de Firebase
         ];
     }
-
-    // Llamar al modelo para obtener detalles desde Firebase
-    $detalles = $this->modelo->obtenerDetalles($isbn);
-
-    // Verificar si se encontraron detalles
-    if (!$detalles) {
-        return [
-            'status' => 404,
-            'message' => 'Detalles no encontrados para el ISBN proporcionado.'
-        ];
-    }
-
-    // Si todo está bien, devolver la respuesta con los detalles
-    return [
-        'status' => 200,
-        'message' => 'Detalles recuperados con éxito.',
-        'detalles' => $detalles // Esto incluirá el contenido que has recuperado de Firebase
-    ];
-}
 
 
 

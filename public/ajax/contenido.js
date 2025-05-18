@@ -201,30 +201,15 @@ $(document).ready(function () {
           alert(`Editar item: ISBN: ${isbn}, Categoría: ${categoria}`);
           $.ajax({
             url: 'http://localhost:8080/ServiciosWeb/ProyectoFinal/kioskoNet/public/detalles',
-            type: 'POST',
-            data: JSON.stringify(isbn),
+            type: 'GET',
+            contentType: 'application/json',  // Asegúrate de enviar los datos como JSON
+            data: JSON.stringify({ isbn: isbn }),
             success: function (respuesta) {
               console.log(respuesta);
 
               modal.style.display = 'block';
 
-              // Comprobar si la respuesta tiene los detalles
-              if (respuesta.status === 200 && respuesta.detalles) {
-                // Rellenar el formulario con los detalles
-                $('#isbn').val(isbn); // ISBN ya está en el formulario, solo para completar
-                $('#titulo').val(respuesta.detalles.Titulo || '');
-                $('#categoria').val(categoria);
-                $('#autor').val(respuesta.detalles.Autor || '');
-                $('#revista').val(respuesta.detalles.Revista || '');
-                $('#editorial').val(respuesta.detalles.Editorial || '');
-                $('#anio').val(respuesta.detalles.Anio || '');
-                $('#genero').val(respuesta.detalles.Genero || '');
-                $('#precio').val(respuesta.detalles.Precio || '');
-                
-                // $('#img').val(respuesta.detalles.Imagen || '')
-              } else {
-                alert('No se pudieron cargar los detalles.');
-              }
+              
             },
             error: function (xhr, status, error) {
               alert('Error al agregar título');
