@@ -103,6 +103,9 @@ class ContenidoService
             ];
         }
 
+        //notificar al webhook
+        $responseWebhook = $this->notificarNuevoTituloWebhook($isbn, $titulo, $categoria);
+
         // Todo bien
         return [
             'status' => 201,
@@ -111,74 +114,77 @@ class ContenidoService
                 'isbn' => $isbn,
                 'categoria' => $categoria,
                 'catalogo' => $resCatalogo,
-                'detalles' => $resDetalles
+                'detalles' => $resDetalles,
+                'webhook' => $responseWebhook //depuración 
             ]
         ];
+ 
+
     }
 
     public function editarTitulo($datosTitulo)
-{
-    $isbn = $datosTitulo['isbn'];
-    $titulo = $datosTitulo['titulo'];
-    $categoria = $datosTitulo['categoria'];
+    {
+        $isbn = $datosTitulo['isbn'];
+        $titulo = $datosTitulo['titulo'];
+        $categoria = $datosTitulo['categoria'];
 
-    // Verificar existencia
-    if (!$this->modelo->verificarTituloExistente($isbn, $categoria)) {
-        return [
-            'status' => 404,
-            'message' => "El título con ISBN {$isbn} no existe en la categoría '{$categoria}' y no se puede editar."
+        // Verificar existencia
+        if (!$this->modelo->verificarTituloExistente($isbn, $categoria)) {
+            return [
+                'status' => 404,
+                'message' => "El título con ISBN {$isbn} no existe en la categoría '{$categoria}' y no se puede editar."
+            ];
+        }
+
+        // Actualizar en catálogo
+        $resCatalogo = $this->modelo->agregarTitulo($isbn, $categoria, $titulo);
+
+        // Preparar detalles
+        $detalles = [
+            'Editorial' => $datosTitulo['editorial'],
+            'Año publicacion' => $datosTitulo['anio'],
+            'Genero' => $datosTitulo['genero'],
+            'Precio' => $datosTitulo['precio'],
+            'Titulo' => $titulo,
+            'Imagen' => $datosTitulo['img'],
         ];
-    }
 
-    // Actualizar en catálogo
-    $resCatalogo = $this->modelo->agregarTitulo($isbn, $categoria, $titulo);
+        if ($categoria === 'Revista') {
+            $detalles['Revista'] = $datosTitulo['revista'];
+        } else {
+            $detalles['Autor'] = $datosTitulo['autor'];
+        }
 
-    // Preparar detalles
-    $detalles = [
-        'Editorial' => $datosTitulo['editorial'],
-        'Año publicacion' => $datosTitulo['anio'],
-        'Genero' => $datosTitulo['genero'],
-        'Precio' => $datosTitulo['precio'],
-        'Titulo' => $titulo,
-        'Imagen' => $datosTitulo['img'],
-    ];
+        // Guardar detalles actualizados
+        $resDetalles = $this->modelo->agregarDetalles($isbn, $detalles);
 
-    if ($categoria === 'Revista') {
-        $detalles['Revista'] = $datosTitulo['revista'];
-    } else {
-        $detalles['Autor'] = $datosTitulo['autor'];
-    }
+        // Verificar errores de Firebase
+        $catalogoError = strpos($resCatalogo, 'error') !== false;
+        $detallesError = strpos($resDetalles, 'error') !== false;
 
-    // Guardar detalles actualizados
-    $resDetalles = $this->modelo->agregarDetalles($isbn, $detalles);
+        if ($catalogoError || $detallesError) {
+            return [
+                'status' => 500,
+                'message' => "Error al editar en Firebase.",
+                'data' => [
+                    'catalogo' => $resCatalogo,
+                    'detalles' => $resDetalles
+                ]
+            ];
+        }
 
-    // Verificar errores de Firebase
-    $catalogoError = strpos($resCatalogo, 'error') !== false;
-    $detallesError = strpos($resDetalles, 'error') !== false;
-
-    if ($catalogoError || $detallesError) {
+        // Todo bien
         return [
-            'status' => 500,
-            'message' => "Error al editar en Firebase.",
+            'status' => 200,
+            'message' => "Título editado correctamente.",
             'data' => [
+                'isbn' => $isbn,
+                'categoria' => $categoria,
                 'catalogo' => $resCatalogo,
                 'detalles' => $resDetalles
             ]
         ];
     }
-
-    // Todo bien
-    return [
-        'status' => 200,
-        'message' => "Título editado correctamente.",
-        'data' => [
-            'isbn' => $isbn,
-            'categoria' => $categoria,
-            'catalogo' => $resCatalogo,
-            'detalles' => $resDetalles
-        ]
-    ];
-}
 
 
 
@@ -207,5 +213,24 @@ class ContenidoService
             'status' => 200,
             'message' => "Título eliminado correctamente."
         ];
+    }
+
+    private function notificarNuevoTituloWebhook($isbn, $titulo, $categoria)
+    {
+        $webhookData = [
+            'isbn' => $isbn,
+            'titulo' => $titulo,
+            'categoria' => $categoria
+        ];
+
+        $ch = curl_init('http://localhost:5000/webhook/titulo');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($webhookData));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return $response; 
     }
 }
