@@ -11,11 +11,31 @@ header {
   height: 100px;
 }
 
-.btnSalir{
+.btnSalir {
   margin-top: 20px;
-  text-align: right; 
+  margin-left: 20px;
+  text-align: right;
   align-items: right;
   text-align: right;
+  background-color: #e74c3c;     
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  user-select: none;
+}
+
+.btnSalir:hover {
+  background-color: #c0392b;      
+}
+
+.btnSalir:active {
+  background-color: #a93226;    
 }
 
 nav {
@@ -25,14 +45,14 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  
 }
 
-
-.titulo-principal{
+.titulo-principal {
   color: white;
+  margin-left: auto; 
+  text-align: right;
 }
+
 
 a {
   text-decoration: none;
@@ -41,35 +61,32 @@ a {
 }
 
 nav a.active {
-  border-bottom: 2px solid #ffbb00; 
+  border-bottom: 2px solid #ffbb00;
 }
 
 .contenedor-principal {
-  text-align: right; 
+  text-align: right;
 }
 
-.btn-agregar{
+.btn-agregar {
   margin: 10px;
-  background-color: #ffbb00; 
-  color: white; 
-  border: none; 
-  padding: 10px 20px; 
-  font-size: 16px; 
-  cursor: pointer; 
-  
+  background-color: #ffbb00;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-
-/* Estilos del modal */
 .modal {
-  display: none; /* Inicialmente oculto */
-  position: fixed; /* Fijo en la pantalla */
-  z-index: 1; /* Asegura que el modal esté encima del contenido */
+  display: none; 
+  position: fixed; 
+  z-index: 1;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro transparente */
+  background-color: rgba(0, 0, 0, 0.5);
   overflow: auto;
 }
 
@@ -78,9 +95,8 @@ nav a.active {
   margin: 5% auto;
   padding: 20px;
   border-radius: 5px;
-  width: 80%; /* Ajusta el ancho */
-  max-width: 500px; /* Máximo ancho */
- 
+  width: 80%; 
+  max-width: 500px; 
 }
 
 .close-btn {
@@ -98,50 +114,45 @@ nav a.active {
   cursor: pointer;
 }
 
-/* Centrar los elementos dentro del contenedor */
+
 .contenedor-catalogo {
-  display: block; /* Esto asegura que los elementos se apilen verticalmente */
-  text-align: center; /* Opcional: centra los elementos dentro del contenedor (si deseas) */
-  margin-top: 20px; /* Para separar un poco el contenido superior */
+  display: block; 
+  text-align: center; 
+  margin-top: 20px; 
 }
 
 #tabla-catalogo {
-  border-collapse: collapse; /* Esto elimina el espacio entre los bordes de las celdas */
-  width: 80%; /* Puedes ajustar el ancho según tus necesidades */
-  max-width: 800px; /* Máximo ancho de la tabla */
-  margin: 20px auto; /* Centra la tabla y le da un margen vertical */
+  border-collapse: collapse; 
+  width: 80%; 
+  max-width: 800px; 
+  margin: 20px auto; 
 }
 
-#tabla-catalogo th, #tabla-catalogo td {
+#tabla-catalogo th,
+#tabla-catalogo td {
   padding: 10px;
-  text-align: left; /* Alineación del contenido de las celdas */
+  text-align: left; 
 }
 
 #tabla-catalogo th {
-  background-color: #db9a82; /* Color de fondo de las cabeceras */
-  color: white; /* Color del texto en las cabeceras */
+  background-color: #db9a82; 
+  color: white; 
 }
 
-
-p{
-  text-align: left; /* Alinea el texto a la izquierda */
-  font-size: 24px; /* Tamaño de letra grande */
+p {
+  text-align: left; 
+  font-size: 24px; 
   margin-left: 250px;
 }
 
-/*Estilos formulario agregar título*/
-
-
-/* Título del formulario */
 h1 {
   text-align: center;
   font-size: 28px;
-  color: #333; 
-  margin-bottom: 30px; 
+  color: #333;
+  margin-bottom: 30px;
   font-weight: 600;
 }
 
-/* Estilo para las etiquetas */
 label {
   font-size: 15px;
   text-align: left;
@@ -149,50 +160,96 @@ label {
   display: block;
 }
 
-/* Estilos para las filas del formulario */
-/* Estilos para las filas del formulario */
-
-
 .form-row {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Dos columnas por defecto */
-  gap: 20px; /* Espacio entre las columnas */
-  margin-bottom: 20px; /* Espacio entre filas */
+  grid-template-columns: 1fr 1fr; 
+  gap: 20px; 
+  margin-bottom: 20px; 
 }
 
-/* Fila para un solo campo que ocupe toda la fila */
 .form-row.full-width {
-  grid-template-columns: 1fr; /* Una sola columna para todo el largo */
+  grid-template-columns: 1fr;
 }
 
-
-/* Estilos para los inputs y el select */
-input[type="text"], input[type="number"], select {
+input[type='text'],
+input[type='number'],
+select {
   width: 100%;
-  margin-bottom: 3px; /* Espacio entre los campos */
-  border: 1px solid #ddd; /* Borde suave */
-  background-color: #fff; /* Fondo blanco */
-  font-size: 16px; /* Tamaño de texto */
-  transition: border 0.3s ease; /* Transición suave para el borde */
+  margin-bottom: 3px; 
+  border: 1px solid #ddd; 
+  background-color: #fff; 
+  font-size: 16px; 
+  transition: border 0.3s ease; 
 }
 
-
-
-
-/* Estilo del botón de envío */
-input[type="submit"] {
-  background-color:  #44be73; /* Color de fondo del botón */
-  color: white; /* Color del texto del botón */
+input[type='submit'] {
+  background-color: #44be73; 
+  color: white; 
   border: none;
   padding: 10px;
   font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.3s ease; /* Transición para el color de fondo */
- 
+  transition: background-color 0.3s ease; 
 }
 
 .detalles-fila td {
   padding-left: 20px;
   font-size: 14px;
   color: #333;
+}
+
+.elemento-izquierda {
+  float: left;
+}
+
+.detalles-fila td {
+  background-color: #f9f9f9;
+  padding: 15px;
+  font-size: 18px;
+  color: #333;
+}
+
+.detalles-especificos {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.detalles-texto {
+  flex: 1;
+}
+
+.detalles-texto p {
+  margin: 6px 0;
+  line-height: 1.4;
+}
+
+p{
+ font-size: 16px;
+}
+
+.editar {
+  background-color: #a3b18a;      
+  color: #fff;                   
+  border: none;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.editar:hover {
+  background-color: #8b9a6f;     
+}
+
+.editar:focus {
+  outline: 2px solid #6b705c;    
+  outline-offset: 2px;
+}
+
+.titulo-catalogo{
+  font-size: 30px;
 }

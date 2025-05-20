@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\ContenidoModel;
 
+header("Content-Type: application/json");
+
 class ContenidoService
 {
     private $modelo;
@@ -18,16 +20,24 @@ class ContenidoService
         return $this->modelo->obtenerCatalogo();
     }
 
-    public function obtenerDetalles($isbn)
+    public function obtenerDetalles($datos)
     {
+        if (!isset($datos['isbn']) || empty($datos['isbn'])) {
+            return [
+                'status' => 400,
+                'message' => 'El ISBN es necesario para recuperar los detalles.',
+                'detalles' => null
+            ];
+        }
 
-        $detalles = $this->modelo->obtenerDetallesPorIsbn($isbn);
+        $isbn = $datos['isbn'];
+        $detalles = $this->modelo->obtenerDetalles($isbn);
 
-
-        if (!$detalles) {
+        if (is_null($detalles)) {
             return [
                 'status' => 404,
-                'message' => 'Detalles no encontrados para el ISBN proporcionado.'
+                'message' => 'Detalles no encontrados para el ISBN proporcionado.',
+                'detalles' => null
             ];
         }
 
@@ -39,8 +49,15 @@ class ContenidoService
     }
 
 
-    public function guardarTitulo($isbn, $titulo, $autor, $editorial, $anio, $genero, $precio, $categoria, $revista)
+
+
+
+    public function guardarTitulo($datosTitulo)
     {
+        $isbn = $datosTitulo['isbn'];
+        $titulo = $datosTitulo['titulo'];
+        $categoria = $datosTitulo['categoria'];
+
         // Verificar duplicado
         if ($this->modelo->verificarTituloExistente($isbn, $categoria)) {
             return [
@@ -54,17 +71,18 @@ class ContenidoService
 
         // Preparar detalles
         $detalles = [
-            'Editorial' => $editorial,
-            'Año publicacion' => $anio,
-            'Genero' => $genero,
-            'Precio' => $precio,
+            'Editorial' => $datosTitulo['editorial'],
+            'Año publicacion' => $datosTitulo['anio'],
+            'Genero' => $datosTitulo['genero'],
+            'Precio' => $datosTitulo['precio'],
             'Titulo' => $titulo,
+            'Imagen' => $datosTitulo['img'],
         ];
 
         if ($categoria === 'Revista') {
-            $detalles['Revista'] = $revista;
+            $detalles['Revista'] = $datosTitulo['revista'];;
         } else {
-            $detalles['Autor'] = $autor;
+            $detalles['Autor'] = $datosTitulo['autor'];;
         }
 
         // Guardar detalles
@@ -85,6 +103,9 @@ class ContenidoService
             ];
         }
 
+        //notificar al webhook
+        $responseWebhook = $this->notificarNuevoTituloWebhook($isbn, $titulo, $categoria);
+
         // Todo bien
         return [
             'status' => 201,
@@ -93,36 +114,48 @@ class ContenidoService
                 'isbn' => $isbn,
                 'categoria' => $categoria,
                 'catalogo' => $resCatalogo,
-                'detalles' => $resDetalles
+                'detalles' => $resDetalles,
+                'webhook' => $responseWebhook //depuración 
             ]
         ];
+ 
+
     }
 
-    public function editarTitulo($isbn, $titulo, $autor, $editorial, $anio, $genero, $precio, $categoria, $revista)
+    public function editarTitulo($datosTitulo)
     {
+        $isbn = $datosTitulo['isbn'];
+        $titulo = $datosTitulo['titulo'];
+        $categoria = $datosTitulo['categoria'];
 
+        // Verificar existencia
         if (!$this->modelo->verificarTituloExistente($isbn, $categoria)) {
-            return ['status' => 404, 'message' => "El título no existe y no se puede editar."];
+            return [
+                'status' => 404,
+                'message' => "El título con ISBN {$isbn} no existe en la categoría '{$categoria}' y no se puede editar."
+            ];
         }
 
+        // Actualizar en catálogo
         $resCatalogo = $this->modelo->agregarTitulo($isbn, $categoria, $titulo);
 
         // Preparar detalles
         $detalles = [
-            'Editorial' => $editorial,
-            'Año publicacion' => $anio,
-            'Genero' => $genero,
-            'Precio' => $precio,
+            'Editorial' => $datosTitulo['editorial'],
+            'Año publicacion' => $datosTitulo['anio'],
+            'Genero' => $datosTitulo['genero'],
+            'Precio' => $datosTitulo['precio'],
             'Titulo' => $titulo,
+            'Imagen' => $datosTitulo['img'],
         ];
 
         if ($categoria === 'Revista') {
-            $detalles['Revista'] = $revista;
+            $detalles['Revista'] = $datosTitulo['revista'];
         } else {
-            $detalles['Autor'] = $autor;
+            $detalles['Autor'] = $datosTitulo['autor'];
         }
 
-        // Guardar detalles
+        // Guardar detalles actualizados
         $resDetalles = $this->modelo->agregarDetalles($isbn, $detalles);
 
         // Verificar errores de Firebase
@@ -142,8 +175,8 @@ class ContenidoService
 
         // Todo bien
         return [
-            'status' => 201,
-            'message' => "Título agregado correctamente.",
+            'status' => 200,
+            'message' => "Título editado correctamente.",
             'data' => [
                 'isbn' => $isbn,
                 'categoria' => $categoria,
@@ -152,6 +185,8 @@ class ContenidoService
             ]
         ];
     }
+
+
 
     public function eliminarTitulo($isbn, $categoria)
     {
@@ -178,5 +213,24 @@ class ContenidoService
             'status' => 200,
             'message' => "Título eliminado correctamente."
         ];
+    }
+
+    private function notificarNuevoTituloWebhook($isbn, $titulo, $categoria)
+    {
+        $webhookData = [
+            'isbn' => $isbn,
+            'titulo' => $titulo,
+            'categoria' => $categoria
+        ];
+
+        $ch = curl_init('http://localhost:5000/webhook/titulo');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($webhookData));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return $response; 
     }
 }

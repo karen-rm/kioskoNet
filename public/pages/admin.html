@@ -103,6 +103,22 @@
               <input type="number" id="precio" name="precio" required>
             </div>
           </div>
+
+          <!-- Septima fila con solo 1 campo: Input para img -->
+          <div class="form-row full-width">
+            <div class="form-group">
+              <label for="img"><b>Seleccionar imagen de portada:</b></label>
+              <input class="elemento-izquierda" type="file" id="img" name="img" accept="image/*" required>
+            </div>
+
+          </div>
+
+
+          <div id="preview-container" style="margin-top:10px;">
+  <img id="preview-img" src="" alt="Vista previa" style="display:none; max-height:100px; border:1px solid #ccc;">
+</div>
+
+
           <!--Botón enviar  -->
           <input type="submit" value="Enviar">
         </form>
@@ -113,7 +129,7 @@
 
     <!-- tabla catálogo-->
     <div class="contenedor-catalogo">
-      <p>CATÁLOGO</p>
+      <p class="titulo-catalogo">CATÁLOGO</p>
       <table border="1" id="tabla-catalogo">
         <thead>
           <tr>

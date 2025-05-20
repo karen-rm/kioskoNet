@@ -18,8 +18,8 @@ class ContenidoModel
   public function verificarTituloExistente($isbn, $categoria)
   {
     $response = $this->firebase->request('Catalogo/' . $categoria, $isbn, 'GET');
-   
-    $decoded = json_decode($response, true); 
+
+    $decoded = json_decode($response, true);
 
     if (isset($decoded['error']) || is_null($decoded)) {
       return false; // No existe
@@ -34,10 +34,12 @@ class ContenidoModel
 
 
   public function agregarTitulo($isbn, $categoria, $titulo)
-  {
-    // El título se manda como string, no como array u objeto
+{
+  
+    // Usamos una ruta explícita para evitar claves aleatorias
     return $this->firebase->request('Catalogo/' . $categoria . '/' . $isbn, '', 'PUT', $titulo);
-  }
+}
+
 
 
   public function agregarDetalles($isbn, $data)
@@ -66,23 +68,29 @@ class ContenidoModel
   }
 
 
-  public function obtenerDetallesPorIsbn($isbn)
-  {
+public function obtenerDetalles($isbn)
+{
+    $isbn = trim($isbn); // 🔧 importante para evitar espacios, saltos de línea
+
+    if (empty($isbn)) {
+        return null; // no continuar si está vacío
+    }
 
     $response = $this->firebase->request('Detalles/', $isbn, 'GET');
 
-    if (empty($response) || $response === 'null') {
-      return null;
+    if ($response === false || $response === 'null' || empty($response)) {
+        return null;
     }
 
     $decoded = json_decode($response, true);
-
-    if (json_last_error() !== JSON_ERROR_NONE) {
-      return null;
+    if (json_last_error() !== JSON_ERROR_NONE || !is_array($decoded)) {
+        return null;
     }
 
     return $decoded;
-  }
+}
+
+
 
 
   public function eliminarTitulo($isbn, $categoria)

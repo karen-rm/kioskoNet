@@ -18,64 +18,34 @@ class ContenidoController
     return $this->servicio->obtenerCatalogo();
   }
 
-  public function obtenerDetalles($datos)
+  public function obtenerDetalles($isbn)
   {
-
-    $isbn = $datos['isbn'] ?? null;
-
-
-    if (empty($isbn)) {
-      return [
-        'status' => 400,
-        'message' => 'El ISBN es necesario para recuperar los detalles.'
-      ];
-    }
-
-
     return $this->servicio->obtenerDetalles($isbn);
   }
 
 
-  public function agregarTitulo($datos)
+  public function agregarTitulo($datosTitulo)
   {
-    $validacion = $this->verificarCampos($datos);
+
+    $validacion = $this->verificarCampos($datosTitulo);
     if ($validacion !== null) {
       return $validacion;
     }
 
     // Llamar al servicio
-    return $this->servicio->guardarTitulo(
-      $datos['isbn'],
-      $datos['titulo'],
-      $datos['autor'] ?? null,
-      $datos['editorial'],
-      $datos['anio'],
-      $datos['genero'],
-      $datos['precio'],
-      $datos['categoria'],
-      $datos['revista'] ?? null
-    );
+    return $this->servicio->guardarTitulo($datosTitulo);
   }
 
-  public function editarTitulo($datos)
+  public function editarTitulo($datosNuevosTitulo)
   {
-    $validacion = $this->verificarCampos($datos);
+    $validacion = $this->verificarCampos($datosNuevosTitulo);
     if ($validacion !== null) {
       return $validacion;
     }
 
     // Llamar al servicio
-    return $this->servicio->editarTitulo(
-      $datos['isbn'],
-      $datos['titulo'],
-      $datos['autor'] ?? null,
-      $datos['editorial'],
-      $datos['anio'],
-      $datos['genero'],
-      $datos['precio'],
-      $datos['categoria'],
-      $datos['revista'] ?? null
-    );
+    return $this->servicio->editarTitulo($datosNuevosTitulo);
+
   }
 
   public function verificarCampos($datos)
@@ -85,8 +55,8 @@ class ContenidoController
       return ['status' => 400, 'message' => 'No se recibieron datos válidos'];
     }
 
-    $requeridosRevista = ['isbn', 'titulo', 'revista', 'editorial', 'anio', 'genero', 'precio', 'categoria'];
-    $requeridos = ['isbn', 'titulo', 'autor', 'editorial', 'anio', 'genero', 'precio', 'categoria'];
+    $requeridosRevista = ['isbn', 'titulo', 'revista', 'editorial', 'anio', 'genero', 'precio', 'categoria', 'img'];
+    $requeridos = ['isbn', 'titulo', 'autor', 'editorial', 'anio', 'genero', 'precio', 'categoria', 'img'];
 
     $categoria = $datos['categoria'] ?? '';
 
