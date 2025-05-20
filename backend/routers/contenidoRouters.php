@@ -5,7 +5,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 
-$app->get('/obtener-catalogo', function ($request, Response $response) {
+$app->get('/catalogo', function ($request, Response $response) {
     $controller = new ContenidoController();
     $resultado = $controller->obtenerCatalogo();
 
