@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Plan empresarial</title>
+  <link rel="stylesheet" href="../utils/pago.css" />
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Datos empresa</h1>
+
+    <form id="formEmpresa">
+      <label for="nombre">Empresa:</label>
+      <input type="text" id="nombre" name="nombreEmpresa" required />
+
+      <label for="username">Usuario:</label>
+      <input type="text" id="username" name="username" required />
+
+      <label for="tipoPlan">Tipo suscripción:</label>
+      <input type="text" id="tipoPlan" name="tipoPlan" required />
+
+      <label for="plan">ID plan:</label>
+      <input type="text" id="plan" name="plan" required />
+
+      <button type="button" id="btnSolicitar" class="solicitar-btn">Solicitar suscripción</button>
+    </form>
+  </div>
+
+  <a href="catalogo.html" class="back-arrow" title="Regresar">
+    <img src="../utils/menuPrincipal.png" alt="Regresar" />
+  </a>
+
+  <script src="../services/suscripcionService.js"></script>
+  <script src="../ajax/suscripcion.js"></script>
+</body>
+
+</html>

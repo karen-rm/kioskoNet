@@ -1,41 +1,51 @@
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #eef2f3;
+  background-image: url('../utils/fondo.jpg'); /* Ruta de la imagen */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+
   display: flex;
-  justify-content: center;
+  justify-content: flex-start; /* Alinea a la izquierda */
   align-items: center;
   height: 100vh;
+  margin: 0;
+  padding-left: 50px;
+  font-family: 'Segoe UI', sans-serif;
 }
 
 .registro-container {
-  background: #fff;
+  margin-top: -70px;
   padding: 30px;
   border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-  width: 350px;
-  text-align: center;
+  text-align: left; /* Cambié a left para que quede alineado */
+  color: black; /* Para que el texto contraste sobre la imagen */
+  max-width: 300px;
+  width: 100%;
 }
 
 input {
-  width: 100%;
+  width: 210px; /* menos ancho */
   padding: 10px;
-  margin: 8px 0;
-  border: 1px solid #ccc;
+  margin-bottom: 15px;
+  border: 1px solid #423d3d;
   border-radius: 5px;
+  display: block;
+  background-color: rgba(255, 255, 255, 0.8); /* fondo ligeramente blanco */
+  color: #333;
 }
 
 button {
-  width: 100%;
+  width: 230px;
   padding: 10px;
-  background-color: #004658;
-  color: white;
+  background-color: #ad502e;
+  color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: #006f82;
+  background-color: #c0603d;
 }
 
 #mensaje-registro {
@@ -46,13 +56,15 @@ button:hover {
 }
 
 .back-arrow {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  cursor: pointer;
   display: inline-block;
-  margin-bottom: 20px;
-  font-size: 16px;
-  color: #004658;
-  text-decoration: underline;
 }
- 
-.back-arrow:hover {
-  color: #006f82;
+
+.back-arrow img {
+  width: 35px;   /* Ajusta el tamaño que quieras */
+  height: 35px;
+  display: block;
 }

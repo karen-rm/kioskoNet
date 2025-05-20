@@ -31,3 +31,29 @@ def cancelar_suscripcion(username):
     })
 
     return {"success": True, "message": "Suscripción cancelada correctamente"}, 200
+
+def solicitar_suscripcion(username, plan_id):
+    init_firebase()
+    ref_plan = db.reference("Plan")
+    planes = ref_plan.get()
+
+    # Buscar el plan en todas las categorías
+    plan_encontrado = None
+    for categoria, subplanes in planes.items():
+        if plan_id in subplanes:
+            plan_encontrado = subplanes[plan_id]
+            break
+
+    if not plan_encontrado:
+        return {"success": False, "message": "Plan no encontrado"}, 404
+
+    # Guardar la suscripción
+    ref_suscripciones = db.reference(f"Suscripciones/{username}")
+    ref_suscripciones.set({
+        "Estado": "Activo",
+        "Fecha activacion": "2025-05-01",
+        "Fecha expiracion": "2025-06-01",
+        "Plan": plan_id
+    })
+
+    return {"success": True, "message": f"Suscripción creada con éxito"}, 201

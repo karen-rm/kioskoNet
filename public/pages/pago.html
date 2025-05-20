@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Simulador de pago</title>
+  <link rel="stylesheet" href="../utils/pago.css" />
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Pago</h1>
+
+    <form id="formPago">
+      <label for="username">Usuario:</label>
+      <input type="text" id="username" name="username" required />
+
+      <label for="plan">Plan:</label>
+      <input type="text" id="plan" name="plan" min="1" step="any" required />
+
+      <label for="monto">Monto:</label>
+      <input type="number" id="monto" name="monto" min="1" step="any" required />
+
+      <label for="cardNumber">Número de tarjeta:</label>
+      <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" autocomplete="off" />
+
+      <label for="expiry">Vencimiento (MM/AA):</label>
+      <input type="text" id="expiry" placeholder="MM/AA" maxlength="5" autocomplete="off" />
+
+      <label for="cvv">CVV:</label>
+      <input type="text" id="cvv" placeholder="123" maxlength="3" autocomplete="off" />
+
+      <script>
+        const cardNumberInput = document.getElementById("cardNumber");
+        const expiryInput = document.getElementById("expiry");
+        const cvvInput = document.getElementById("cvv");
+
+        // Formatear número de tarjeta en grupos de 4 dígitos, máximo 16 números
+        cardNumberInput.addEventListener("input", (e) => {
+          let value = e.target.value;
+          value = value.replace(/\D/g, "");
+          if (value.length > 16) value = value.slice(0, 16);
+
+          let formattedValue = "";
+          for (let i = 0; i < value.length; i++) {
+            if (i > 0 && i % 4 === 0) formattedValue += " ";
+            formattedValue += value[i];
+          }
+          e.target.value = formattedValue;
+        });
+
+        // Formatear y validar vencimiento MM/AA
+        expiryInput.addEventListener("input", (e) => {
+          let value = e.target.value;
+          value = value.replace(/\D/g, "");
+          if (value.length > 4) value = value.slice(0, 4);
+          if (value.length > 2) value = value.slice(0, 2) + "/" + value.slice(2);
+          e.target.value = value;
+        });
+
+        expiryInput.addEventListener("blur", (e) => {
+          const val = e.target.value;
+          if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(val)) {
+            alert("Formato de vencimiento inválido. Usa MM/AA con mes entre 01 y 12.");
+            e.target.focus();
+          }
+        });
+
+        // Validar CVV: solo números, máximo 3 dígitos
+        cvvInput.addEventListener("input", (e) => {
+          let value = e.target.value;
+          value = value.replace(/\D/g, "");
+          if (value.length > 3) value = value.slice(0, 3);
+          e.target.value = value;
+        });
+      </script>
+      <button type="submit">Pagar</button>
+
+    </form>
+
+    <div id="resultado" class="resultado"></div>
+  </div>
+
+  <a href="catalogo.html" class="back-arrow" title="Regresar">
+      <img src="../utils/menuPrincipal.png" alt="Regresar" />
+  </a>
+
+  <script src="../services/pagoService.js"></script>
+  <script src="../ajax/pago.js"></script>
+</body>
+
+</html>

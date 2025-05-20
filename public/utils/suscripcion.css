@@ -1,0 +1,62 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 20px;
+  background: #f5f7fa;
+}
+
+.titulo {
+  text-align: center;
+  color: black;
+  margin-bottom: 30px;
+  font-weight: 700;
+  font-size: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+/* Contenedor de planes */
+.planes-container {
+  max-width: 100%;
+  margin: 0 auto 40px auto;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, auto);
+  gap: 20px;
+}
+
+
+/* Estilo de cada plan */
+.plan {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgb(0 0 0 / 0.1);
+}
+
+.plan h3 {
+  margin-top: 0;
+  color: black;
+}
+
+.plan p {
+  margin: 8px 0;
+}
+
+.plan a.solicitar-btn {
+  display: inline-block;
+  background-color:#ad502e;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.plan a.solicitar-btn:hover {
+  background-color: #c0603d;
+}
+
