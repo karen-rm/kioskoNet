@@ -1,16 +1,18 @@
-export async function solicitarSuscripcion(username, plan) {
-  if (!username) throw new Error("El usuario es obligatorio");
+export async function obtenerSuscripcion(username) {
+  try {
+    const response = await fetch(`http://localhost:5000/api/suscripcion/${encodeURIComponent(username)}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    });
 
-  const response = await fetch("http://localhost:5000/api/suscripcion", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, plan })
-  });
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.message || 'Error al obtener suscripción');
+    }
 
-  if (!response.ok) {
-    const errData = await response.json();
-    throw new Error(errData.message || "Error solicitando suscripción");
+    const data = await response.json();
+    return data.suscripcion;
+  } catch (error) {
+    throw error;
   }
-
-  return response.json();
 }

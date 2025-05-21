@@ -42,4 +42,6 @@ window.addEventListener("DOMContentLoaded", () => {
   if(monto) document.getElementById("monto").value = monto;
 });
 
-
+document.getElementById('btnCancelar').addEventListener('click', function() {
+  window.location.href = '../pages/suscripcion.html';
+});

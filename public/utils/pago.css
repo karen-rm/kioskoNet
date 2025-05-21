@@ -35,7 +35,7 @@ form input, form select {
 button {
     margin-top: 20px;
     width: 100%;
-    background-color: #ad502e;
+    background-color: #004658;
     color: white;
     font-size: 16px;
     padding: 10px;
@@ -45,7 +45,7 @@ button {
 }
 
 button:hover {
-    background-color: #c0603d;
+    background-color: #006f82;
 }
 
 .resultado {
@@ -62,6 +62,20 @@ button:hover {
 .resultado.error {
     background-color: #f8d7da;
     color: black;
+}
+
+button#btnCancelar {
+  width: 100%;
+  background-color:#ad502e;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button#btnCancelar:hover {
+  background-color: #c0603d;
 }
 
 .back-arrow {

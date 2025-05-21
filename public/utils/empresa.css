@@ -1,0 +1,81 @@
+/* Reset básico y estilos de fondo */
+body {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+
+  /* Flex para centrar horizontalmente y con espacio arriba */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 80px; /* espacio desde arriba */
+}
+
+/* Contenedor del formulario */
+.container {
+  background: white;
+  padding: 25px 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  width: 350px;
+}
+
+/* Título centrado */
+.container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Etiquetas y campos del formulario */
+form label {
+  display: block;
+  margin-top: 10px;
+}
+
+form input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+/* Botón enviar */
+form button {
+  margin-top: 20px;
+  width: 100%;
+  background-color: #004658;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+form button:hover {
+  background-color: #006f82;
+}
+
+/* Mensajes de respuesta */
+#mensaje {
+  margin-top: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+button#btnCancelar {
+  width: 100%;
+  background-color:#ad502e;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button#btnCancelar:hover {
+  background-color: #c0603d;
+}
