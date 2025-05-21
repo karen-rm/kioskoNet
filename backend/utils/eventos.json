@@ -34,5 +34,17 @@
     "isbn": "11",
     "categoria": "Revista",
     "hora": "2025-05-20T16:09:07.626970"
+  },
+  {
+    "titulo": "El principito",
+    "isbn": "LIB009",
+    "categoria": "Libro",
+    "hora": "2025-05-21T00:19:50.017802"
+  },
+  {
+    "titulo": "Maravilloso desastre",
+    "isbn": "9786071128041",
+    "categoria": "Libro",
+    "hora": "2025-05-21T00:52:33.085648"
   }
 ]

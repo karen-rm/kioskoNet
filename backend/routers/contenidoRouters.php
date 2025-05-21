@@ -15,7 +15,7 @@ $app->get('/catalogo', function ($request, Response $response) {
         ->withHeader('Content-Type', 'application/json');
 });
 
-$app->post('/recuperar-detalles', function (Request $request, Response $response) {
+/*$app->post('/recuperar-detalles', function (Request $request, Response $response) {
 
     
     $datos = $request->getParsedBody();
@@ -38,7 +38,7 @@ $app->post('/recuperar-detalles', function (Request $request, Response $response
     return $response
         ->withStatus($status)
         ->withHeader('Content-Type', 'application/json');
-});
+});*/
 
 $app->post('/imagen', function (Request $request, Response $response) {
     
