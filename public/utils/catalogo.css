@@ -1,60 +1,113 @@
-* {
-    box-sizing: border-box;
+/* Reset básico */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-    background: #f4f6f9;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f4f6f9;
 }
 
 header {
-    background-color: #2c3e50;
-    color: white;
-    padding: 20px;
-    text-align: center;
+  background-color: #ad502e;
+  color: white;
+  padding: 20px;
+}
+
+/* Contenedor flex dentro del header */
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Botones de suscripción a la izquierda */
+#botones-suscripciones {
+  display: flex;
+  gap: 12px;
+}
+
+/* Centrar el título */
+header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  text-align: center;
+  flex-grow: 1; /* Ocupa el espacio entre los botones */
+  user-select: none;
+}
+
+/* Botón cerrar sesión a la derecha */
+#boton-cerrar-sesion {
+  /* solo contiene un botón, no necesita display flex */
+}
+
+/* Estilos para los botones (suscripciones y cerrar sesión) */
+#botones-suscripciones button,
+#boton-cerrar-sesion button {
+  background-color: #004658;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: 600;
+}
+
+#botones-suscripciones button:hover,
+#boton-cerrar-sesion button:hover {
+  background-color: #006f82;
+}
+
+#botones-suscripciones button:active,
+#boton-cerrar-sesion button:active {
+  background-color: #006f82;
 }
 
 main {
-    padding: 30px;
-    max-width: 1000px;
-    margin: auto;
+  padding: 30px;
+  max-width: 1000px;
+  margin: auto;
 }
 
 h2 {
-    color: #34495e;
-    border-bottom: 2px solid #3498db;
-    padding-bottom: 5px;
+  color: #34495e;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
 }
 
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 40px;
-    background: white;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 40px;
+  background: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 th, td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
 }
 
 th {
-    background-color: #3498db;
-    color: white;
+  background-color: #3498db;
+  color: white;
 }
 
 tr:hover {
-    background-color: #f1f1f1;
+  background-color: #f1f1f1;
 }
 
 .no-data {
-    text-align: center;
-    font-size: 1.2em;
-    color: #888;
+  text-align: center;
+  font-size: 1.2em;
+  color: #888;
 }
 
 .toast {
@@ -72,4 +125,6 @@ tr:hover {
   z-index: 9999;
   margin-top: 5px;
 }
+
+
 

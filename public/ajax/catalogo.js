@@ -47,4 +47,19 @@ $(document).ready(function () {
       $('#contenido').html(`<p class="error"> Error: ${error}</p>`);
     },
   });
+
+  // Función para cerrar sesión
+  $('#btnCerrarSesion').click(function () {
+    window.location.href = 'login.html'; 
+  });
+
+  // Función para obtener suscripción 
+  $('#btnObtenerSuscripcion').click(function () {
+    window.location.href = 'suscripcion.html'; 
+  });
+
+  // Función para visualizar suscripción
+  $('#btnVisualizarSuscripcion').click(function () {
+    window.location.href = 'buscarSuscripcion.html'; 
+  });
 });

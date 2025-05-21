@@ -1,35 +1,46 @@
 <!DOCTYPE html>
 <html lang="es">
 
-  <head>
-    <meta charset="UTF-8">
-    <title>Catálogo</title>
-    <link rel="stylesheet" href="../utils/catalogo.css">
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <title>Catálogo</title>
+  <link rel="stylesheet" href="../utils/catalogo.css">
+</head>
 
-  <body>
+<body>
 
-    <header>
-      <h1>Catálogo de Productos</h1>
-    </header>
+  <header>
+    <div class="header-container">
+      <div id="botones-suscripciones">
+        <button id="btnObtenerSuscripcion">Obtener suscripción</button>
+        <button id="btnVisualizarSuscripcion">Visualizar mi suscripción</button>
+      </div>
 
-    <main id="contenido">
-      <p>Cargando datos...</p>
-    </main>
+      <h1>KIOSKONET</h1>
 
-    <div id="notificaciones"></div>
-    <div id="tabla-container"></div>
+      <div id="boton-cerrar-sesion">
+        <button id="btnCerrarSesion">Cerrar sesión</button>
+      </div>
+    </div>
+  </header>
 
-    <!-- Cargar jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <main id="contenido">
+    <p>Cargando datos...</p>
+  </main>
 
-    <!-- Archivo JavaScript principal -->
-    <script src="../ajax/catalogo.js"></script>
+  <div id="notificaciones"></div>
+  <div id="tabla-container"></div>
 
-    <!-- Archivo JavaScript webhook -->
-    <script src="../ajax/notificaciones.js"></script>
+  <!-- Cargar jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- Archivo JavaScript principal -->
+  <script src="../ajax/catalogo.js"></script>
+
+  <!-- Archivo JavaScript webhook -->
+  <script src="../ajax/notificaciones.js"></script>
 
 
-  </body>
+</body>
 
 </html>
