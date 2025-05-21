@@ -17,18 +17,14 @@ class ContenidoModel
   // Función para verificar si el ISBN ya existe
   public function verificarTituloExistente($isbn, $categoria)
   {
-    // Hacemos la solicitud GET
     $response = $this->firebase->request('Catalogo/' . $categoria, $isbn, 'GET');
 
-    // Intentamos decodificar
-    $decoded = json_decode($response, true); // ← usamos true para array asociativo
+    $decoded = json_decode($response, true);
 
-    // Si hay un error o el documento no existe (devuelve null)
     if (isset($decoded['error']) || is_null($decoded)) {
       return false; // No existe
     }
 
-    // Si está vacío como array vacío o string vacío
     if (is_array($decoded) && count($decoded) === 0) {
       return false; // No existe
     }
@@ -37,15 +33,12 @@ class ContenidoModel
   }
 
 
-
-
-  // Agregar un título a Firebase
   public function agregarTitulo($isbn, $categoria, $titulo)
-  {
-    // El título se manda como string, no como array u objeto
+{
+  
+    // Usamos una ruta explícita para evitar claves aleatorias
     return $this->firebase->request('Catalogo/' . $categoria . '/' . $isbn, '', 'PUT', $titulo);
-  }
-
+}
 
 
 
@@ -74,12 +67,39 @@ class ContenidoModel
     return $decoded;
   }
 
-  public function eliminarTitulo($isbn, $categoria){
+
+public function obtenerDetalles($isbn)
+{
+    $isbn = trim($isbn); // 🔧 importante para evitar espacios, saltos de línea
+
+    if (empty($isbn)) {
+        return null; // no continuar si está vacío
+    }
+
+    $response = $this->firebase->request('Detalles/', $isbn, 'GET');
+
+    if ($response === false || $response === 'null' || empty($response)) {
+        return null;
+    }
+
+    $decoded = json_decode($response, true);
+    if (json_last_error() !== JSON_ERROR_NONE || !is_array($decoded)) {
+        return null;
+    }
+
+    return $decoded;
+}
+
+
+
+
+  public function eliminarTitulo($isbn, $categoria)
+  {
     return $this->firebase->request("Catalogo/{$categoria}", $isbn, 'DELETE');
   }
 
-  public function eliminarDetalles($isbn){
+  public function eliminarDetalles($isbn)
+  {
     return $this->firebase->request('Detalles/', $isbn, 'DELETE', null);
   }
-
 }
