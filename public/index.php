@@ -13,6 +13,7 @@ $app->setBasePath("/ServiciosWeb/ProyectoFinal/kioskoNet/public");
 
 // Archivo que contiene las rutas
 require __DIR__ . '/../backend/routers/contenidoRouters.php';
+require __DIR__ . '/../backend/routers/catalogoRouters.php';
 
 // Ejecutar la aplicación
 $app->run();

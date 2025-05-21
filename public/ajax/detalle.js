@@ -14,12 +14,12 @@ $(document).ready(function() {
                 detallesDiv.empty();
                 textoDiv.empty();
 
-                const detalles = respuesta.detalles || respuesta; // Ajusta según estructura JSON recibida
+                const detalles = respuesta.detalles; 
 
                 Object.entries(detalles).forEach(([clave, valor]) => {
                     if (clave.toLowerCase() === 'imagen' && valor) {
                         detallesDiv.append(
-                            `<img src="../${valor}" alt="Imagen del libro" style="width:170px; height:190px; margin-left: 2px; margin-top: 10px; border-radius: 5px;">`
+                            `<img src="../${valor}" alt="Imagen del libro" style="width:170px; height:220px; margin-left: 2px; margin-top: 10px; border-radius: 5px;">`
                         );
                     } else {
                         textoDiv.append(`<p><b>${clave}:</b> ${valor || '-'}</p>`);
