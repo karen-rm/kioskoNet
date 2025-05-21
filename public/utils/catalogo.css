@@ -56,3 +56,20 @@ tr:hover {
     font-size: 1.2em;
     color: #888;
 }
+
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #4caf50;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 5px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  opacity: 1;
+  transition: opacity 0.5s ease;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  z-index: 9999;
+  margin-top: 5px;
+}
+

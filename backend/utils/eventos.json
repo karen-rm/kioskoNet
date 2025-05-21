@@ -1,11 +1,5 @@
 [
   {
-    "titulo": "Maravilloso desastre",
-    "isbn": "9786071128041",
-    "categoria": "Libro",
-    "hora": "2025-05-19T08:14:50.512186"
-  },
-  {
     "titulo": "Un titulo",
     "isbn": "123456788",
     "categoria": "Libro",
@@ -46,5 +40,23 @@
     "isbn": "9786071128041",
     "categoria": "Libro",
     "hora": "2025-05-21T00:52:33.085648"
+  },
+  {
+    "titulo": "CARDCAPTOR SAKURA ",
+    "isbn": "1123478456",
+    "categoria": "Manga",
+    "hora": "2025-05-21T04:08:00.903861"
+  },
+  {
+    "titulo": "Dos crimenes",
+    "isbn": "1234567445544",
+    "categoria": "Libro",
+    "hora": "2025-05-21T04:44:01.933286"
+  },
+  {
+    "titulo": "COVID-19 Post- pandemia",
+    "isbn": "13323224",
+    "categoria": "Revista",
+    "hora": "2025-05-21T04:58:56.377166"
   }
 ]
