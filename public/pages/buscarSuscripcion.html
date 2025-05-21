@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Datos suscripción</title>
+  <link rel="stylesheet" href="../utils/vistaPlan.css" />
+</head>
+
+<body>
+  <div class="container">
+    <h2>Datos suscripción</h2>
+
+    <form id="formBuscar">
+      <label for="username">Nombre de usuario:</label>
+      <input type="text" id="username" required />
+      <button type="submit">Buscar suscripción</button>
+    </form>
+
+    <div id="resultado" class="resultado oculto">
+      <!-- Aquí se mostrará la info -->
+    </div>
+
+    <!-- Después de mostrar la suscripción -->
+    <div id="acciones" class="resultado oculto">
+      <button id="btnCancelar">Cancelar suscripción</button>
+    </div>
+
+    <div id="mensaje" class="mensaje"></div>
+  </div>
+
+  <a href="catalogo.html" class="back-arrow" title="Regresar">
+    <img src="../utils/menuPrincipal.png" alt="Regresar" />
+  </a>
+
+  <script type="module" src="../ajax/suscripcion.js"></script>
+</body>
+
+</html>
