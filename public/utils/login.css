@@ -1,39 +1,57 @@
 body {
-  background: #f0f4f8;
-  font-family: 'Segoe UI', sans-serif;
+  background-image: url('../utils/fondo.jpg'); /* Ruta de la imagen */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+
   display: flex;
-  justify-content: center;
+  justify-content: flex-start; /* Alinea a la izquierda */
   align-items: center;
   height: 100vh;
   margin: 0;
+  padding-left: 50px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.title {
+  position: absolute; /* para que no afecte el layout del login */
+  top: 80px; /* distancia desde arriba */
+  left: 50px; /* igual que el padding-left del body */
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ad502e; /* para que contraste con el fondo */
+  font-family: 'Segoe UI', sans-serif; /* para evitar que se seleccione por error */
 }
 
 .login-container {
-  background-color: #ffffff;
   padding: 30px;
   border-radius: 10px;
-  box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
-  width: 300px;
-  text-align: center;
+  text-align: left; /* Cambié a left para que quede alineado */
+  color: black; /* Para que el texto contraste sobre la imagen */
+  max-width: 300px;
+  width: 100%;
 }
 
 .login-container h2 {
   margin-bottom: 20px;
-  color: #333;
+  color: rgb(8, 8, 8);
 }
 
 .login-container input {
-  width: 100%;
+  width: 200px; /* menos ancho */
   padding: 10px;
   margin-bottom: 15px;
-  border: 1px solid #ccc;
+  border: 1px solid #423d3d;
   border-radius: 5px;
+  display: block;
+  background-color: rgba(255, 255, 255, 0.8); /* fondo ligeramente blanco */
+  color: #333;
 }
 
 .login-container button {
-  width: 100%;
+  width: 220px; /* coincide con inputs */
   padding: 10px;
-  background-color: #004658;
+  background-color: #ad502e;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -41,11 +59,26 @@ body {
 }
 
 .login-container button:hover {
-  background-color: #006f82;
+  background-color: #c0603d;
 }
 
 #mensaje-error {
   margin-top: 10px;
   color: red;
   font-size: 0.9em;
+}
+
+/* Para el link */
+.login-container p {
+  color: black;
+  margin-top: 15px;
+  text-align: left;
+}
+.login-container a {
+  color: #004658;
+  text-decoration: underline;
+}
+
+.login-container a:hover {
+  color: #006f82;
 }

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Selecciona tu plan de suscripción</title>
+  <link rel="stylesheet" href="../utils/suscripcion.css" />
+</head>
+<body>
+
+  <h2 class="titulo">Plan de suscripción</h2>
+
+  <div class="planes-container">
+    <div class="plan">
+      <h3>Básico</h3>
+      <p>Acceso a 5 contenidos por mes, lectura online, funciones básicas, acceso a contenido estándar.</p>
+      <p><strong>Precio:</strong> $99</p>
+      <p><strong>Dispositivos:</strong> 1</p>
+      <a href="pago.html?monto=99&plan=Básico" class="solicitar-btn">Solicitar suscripción</a>
+    </div>
+
+    <div class="plan">
+      <h3>Familiar</h3>
+      <p>Acceso ilimitado a todo el catálogo, registro de 5 perfiles diferentes, ofertas mensuales.</p>
+      <p><strong>Precio:</strong> $150</p>
+      <p><strong>Dispositivos:</strong> 5</p>
+      <a href="pago.html?monto=150&plan=Familiar" class="solicitar-btn">Solicitar suscripción</a>
+    </div>
+
+    <div class="plan">
+      <h3>Premium</h3>
+      <p>Acceso ilimitado a contenido, descargas ilimitadas, recomendaciones personalizadas.</p>
+      <p><strong>Precio:</strong> $120</p>
+      <p><strong>Dispositivos:</strong> 3</p>
+      <a href="pago.html?monto=120&plan=Premium" class="solicitar-btn">Solicitar suscripción</a>
+    </div>
+
+    <div class="plan">
+      <h3>Empresarial</h3>
+      <p>Acceso para 20 usuarios, gestión de equipos, acceso prioritario al soporte.</p>
+      <p><strong>Precio:</strong> $4000</p>
+      <p><strong>Usuarios:</strong>20</p>
+      <a href="empresa.html" class="solicitar-btn">Solicitar suscripción</a>
+    </div>
+  </div>
+
+  <script src="../services/suscripcionService.js"></script>
+  <script src="../ajax/suscripcion.js"></script>
+
+</body>
+</html>
