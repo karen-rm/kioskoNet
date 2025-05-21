@@ -1,11 +1,5 @@
 [
   {
-    "titulo": "Un titulo",
-    "isbn": "123456788",
-    "categoria": "Libro",
-    "hora": "2025-05-19T08:21:12.834887"
-  },
-  {
     "titulo": "jjjj",
     "isbn": "COM005",
     "categoria": "Comic",
@@ -58,5 +52,11 @@
     "isbn": "13323224",
     "categoria": "Revista",
     "hora": "2025-05-21T04:58:56.377166"
+  },
+  {
+    "titulo": "Maravilloso desastre",
+    "isbn": "9786071128041",
+    "categoria": "Libro",
+    "hora": "2025-05-21T05:12:34.869957"
   }
 ]

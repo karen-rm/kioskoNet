@@ -48,7 +48,9 @@ def recibir_nuevo_titulo():
   guardar_evento(nuevo_evento)
 
   print(f"[Webhook] Nuevo título: {data}")
-  return jsonify({"status": "ok"}), 200
+  #return jsonify({"status": "ok"}), 200
+  return jsonify(nuevo_evento), 200
+
 
 @webhookRouter.route('/stream')
 def stream():
