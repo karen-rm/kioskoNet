@@ -9,6 +9,7 @@ recursos por número de usuarios.
 
 ##Demo
 Inicio de sesión:
+<img width="1341" height="623" alt="Inicio sesion" src="https://github.com/user-attachments/assets/936f9c18-59b3-45ee-9844-f2d4e835ec2a" />
 
 
 
