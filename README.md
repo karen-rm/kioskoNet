@@ -245,5 +245,10 @@ Si la instalación fue exitosa:
 * Los servicios de autenticación, pagos y suscripciones responderán desde Flask.
 * Firebase permitirá la autenticación y gestión de usuarios.
 
-```
-```
+## Autores
+
+Proyecto desarrollado por:
+
+- Yuliana Casanova López
+- David Martínez Cebada
+- Ana Karen Ramírez Martínez
